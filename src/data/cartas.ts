@@ -25,13 +25,16 @@ E essa alegria aparecia até nas broncas: você ficava séria quando precisava, 
 Vai fazer muita falta, chefinha. Tudo de sucesso e de melhor nessa sua nova jornada em outra cidade!`,
   },
   {
-    de: "Nome da pessoa",
-    cargo: "Exemplo de carta",
-    texto: `{nome},
+    de: "Daniels",
+    texto: `Oii Thalita,
+Nem sempre a gente esteve em perfeita sintonia, mas acho que é justamente isso que torna a amizade que construímos tão especial.
 
-Obrigado por cada café, cada ajuda de última hora e cada risada no meio de um dia corrido. Você deixou tudo mais leve.
+Queria te agradecer pela paciência, pela compreensão e principalmente por saber lidar tão bem com as pessoas, mesmo quando elas não facilitam muito as coisas (e olha que eu sei que já fiz parte desse grupo kkkk).
 
-Agora é chamada de vídeo, mas a parceria é a mesma.`,
+Também sou muito grato por você ter me dado uma força em alguns momentos importantes, principalmente em um deles que talvez você nem tenha ideia do quanto significou pra mim.
+
+Te desejo muita felicidade e conquistas nessa nova fase! E já que estamos falando de Hogwarts, que não falte um pouquinho de magia nessa nova jornada!
+Obrigado por tudo! ❤️`,
   },
   {
     de: "Nome da pessoa",
