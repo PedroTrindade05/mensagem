@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import Cenario from "./cena/Cenario";
+import BotaoTelaCheia from "./components/BotaoTelaCheia";
 import Abertura from "./components/Abertura";
 import Legenda from "./components/Legenda";
 import Revelacao from "./components/Revelacao";
@@ -218,6 +219,7 @@ export default function App() {
 
   return (
     <>
+      <BotaoTelaCheia />
       <Cenario
         fase={fase}
         casa={DESPEDIDA.casa}

@@ -1508,6 +1508,33 @@ body[data-house="lufalufa"]   { --house-1: #f5cf6d; --house-2: #726255; --house-
 }
 
 /* =========================================================================
+   BOTAO DE TELA CHEIA (canto superior direito)
+   ========================================================================= */
+.btn-tela-cheia {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  /* acima de tudo, inclusive da carta aberta */
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgba(232, 196, 120, .38);
+  border-radius: 50%;
+  background: rgba(10, 8, 6, .5);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: rgba(246, 226, 184, .9);
+  cursor: pointer;
+  opacity: .75;
+  transition: opacity .25s, border-color .25s, background .25s, transform .3s var(--ease-out);
+}
+.btn-tela-cheia:hover { opacity: 1; border-color: rgba(255, 220, 150, .85); background: rgba(40, 28, 14, .7); transform: scale(1.06); }
+.btn-tela-cheia:focus-visible { opacity: 1; outline: 2px solid #f2c879; outline-offset: 2px; }
+
+/* =========================================================================
    MOVIMENTO REDUZIDO
    ========================================================================= */
 @media (prefers-reduced-motion: reduce) {
