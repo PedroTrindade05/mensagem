@@ -4,6 +4,7 @@ import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 import { DESPEDIDA } from "../data/despedida";
 import { asset } from "../config";
+import { entrarEmTelaCheia } from "../hooks/useTelaCheia";
 import LuzVarinha from "./LuzVarinha";
 
 gsap.registerPlugin(SplitText, useGSAP);
@@ -209,6 +210,7 @@ export default function Abertura({ pronto, comCastelo, onPrimeiroToque, onAcende
   const teclaDesce = (e: React.KeyboardEvent): void => {
     if ((e.key === "Enter" || e.key === " ") && !e.repeat) {
       e.preventDefault();
+      entrarEmTelaCheia();
       comecar();
     }
   };
@@ -261,9 +263,15 @@ export default function Abertura({ pronto, comCastelo, onPrimeiroToque, onAcende
             aria-label={comCastelo ? "Segure para entrar no castelo e começar a cerimônia" : "Segure para acender as velas e começar a cerimônia"}
             onPointerDown={(e) => {
               e.currentTarget.setPointerCapture(e.pointerId);
+              // tela cheia pede um gesto do usuario: com mouse vale ao apertar,
+              // com o dedo so ao soltar (as duas chamadas se completam)
+              entrarEmTelaCheia();
               comecar();
             }}
-            onPointerUp={soltar}
+            onPointerUp={() => {
+              entrarEmTelaCheia();
+              soltar();
+            }}
             onPointerCancel={soltar}
             onLostPointerCapture={soltar}
             onKeyDown={teclaDesce}

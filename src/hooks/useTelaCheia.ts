@@ -35,6 +35,22 @@ function suportada(): boolean {
   return temPedido && liberada !== false;
 }
 
+/**
+ * Entra em tela cheia (nunca sai). Precisa ser chamada de dentro de um gesto
+ * do usuario (toque, clique ou tecla); fora disso o navegador recusa e nada
+ * acontece. No iPhone nao existe e a chamada e ignorada.
+ */
+export function entrarEmTelaCheia(): void {
+  if (!suportada() || emTelaCheia()) return;
+  try {
+    const raiz = document.documentElement as ElementoWebkit;
+    const r = raiz.requestFullscreen ? raiz.requestFullscreen() : raiz.webkitRequestFullscreen?.();
+    if (r) void r.catch(() => {});
+  } catch {
+    /* recusada pelo navegador: a pagina segue normal */
+  }
+}
+
 export interface TelaCheia {
   /** false quando o navegador nao oferece tela cheia (ex.: iPhone). */
   disponivel: boolean;
