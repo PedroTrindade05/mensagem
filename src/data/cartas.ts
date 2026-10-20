@@ -13,13 +13,16 @@ import type { Carta } from "../types";
 
 export const CARTAS: readonly Carta[] = [
   {
-    de: "Nome da pessoa",
-    cargo: "Exemplo de carta",
-    texto: `Querida {nome},
+    de: "Pedro Toni",
+    texto: `Thalita,
 
-Vai ser estranho olhar para a sua mesa e não te ver ali, mas a gente sabe que a distância é só de quilômetros. No resto, você continua aqui do lado.
+Obrigado pelo voto de confiança quando me deu a oportunidade de entrar na Nexus. Foi uma porta importante para mim, e sou grato por ela.
 
-Que a cidade nova te receba do jeito que você sempre recebeu a gente: de braços abertos.`,
+Desde então foi um período de muito aprendizado, com projetos que exigiram bastante e me fizeram crescer. Obrigado por ter acompanhado essa caminhada de perto. Cada fase trouxe desafios diferentes, e levo comigo a experiência de ter passado por eles.
+
+Desejo sucesso no seu próximo caminho, que venham boas oportunidades e que essa nova fase seja muito boa para você.
+
+Um abraço, e até uma próxima.`,
   },
   {
     de: "Nome da pessoa",
