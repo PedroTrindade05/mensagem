@@ -107,4 +107,14 @@ Você é uma pessoa incrível que anima e ilumina cada lugar por onde passa, Lon
 
 OBS: você também está proibida de ter outra colega de trabalho ou amiga em Londrina ou qualquer outro lugar!`,
   },
+  {
+    de: "Felipe",
+    texto: `Thalita,
+
+Obrigado por todo o tempo de trabalho junto, pela confiança e pelo bom humor que deixavam o dia mais leve. Faz diferença ter alguém assim por perto, e vai fazer falta.
+
+Desejo muita sorte nessa nova fase em Londrina. Que seja um recomeço muito bom, e que a gente continue em contato.
+
+Abraço!`,
+  },
 ];
