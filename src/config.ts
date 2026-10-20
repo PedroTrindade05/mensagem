@@ -38,6 +38,10 @@ export const EFEITOS_CINEMA =
  */
 export const VIDEO_CASTELO = "video/castelo-noite.mp4";
 export const VIDEO_VOO = "video/voo-ate-o-salao.mp4";
+/** Mural de cartas: a camera sobe do castelo ate as nuvens (toca uma vez)... */
+export const VIDEO_NUVENS_VOO = "video/voo-ate-as-nuvens.mp4";
+/** ...e emenda na coruja com a sacola de cartas, em loop. */
+export const VIDEO_NUVENS = "video/nuvens-coruja.mp4";
 
 /* Volumes (0 a 1) */
 

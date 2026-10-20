@@ -23,7 +23,7 @@ import type { ModoAparicao } from "./cena/aparicao";
    abertura  -> o salao escuro; o clique libera o som e a camera desce
    cerimonia -> o Chapeu acorda e fala a mensagem, trecho por trecho
    selecao   -> ele pensa... e anuncia a casa (DESPEDIDA.casa)
-   revelacao -> brasao, dedicatoria e o convite para as cartas
+   revelacao -> o nome dela e o convite para as cartas
    login     -> o Correio Coruja so abre com usuario e senha
    cartas    -> o mural de envelopes
 
@@ -203,11 +203,6 @@ export default function App() {
     void irPara("abertura");
   }, [irPara]);
 
-  const reverCerimonia = useCallback((): void => {
-    trilha.iniciar();
-    void cerimonia();
-  }, [trilha, cerimonia]);
-
   /* ---------- a cara do Chapeu ---------- */
   const fala = DESPEDIDA.falas[trecho];
   const humor: Humor =
@@ -233,10 +228,12 @@ export default function App() {
         lerProgresso={voz.progressoVoz}
         velasAcesas={velasAcesas}
         onPronto={() => setCenaPronta(true)}
-        etapaVideo={fase !== "abertura" ? "fim" : voando ? "voo" : saiuDoCastelo ? "fim" : "castelo"}
+        // a carta de login fica na frente do castelo em loop
+        etapaVideo={fase === "login" ? "castelo" : fase !== "abertura" ? "fim" : voando ? "voo" : saiuDoCastelo ? "fim" : "castelo"}
         onVideos={setVideos}
         onFimVoo={fimDoVoo}
-        esconder3d={fase === "abertura" && !!videos?.castelo && !voando && !saiuDoCastelo}
+        // o mural tem os proprios videos (as nuvens) cobrindo a tela inteira
+        esconder3d={fase === "cartas" || (!!videos?.castelo && ((fase === "abertura" && !voando && !saiuDoCastelo) || fase === "login"))}
         cortarCamera={chegouVoando}
         aparicao={aparicao}
       />
@@ -281,7 +278,7 @@ export default function App() {
           {fase === "login" && <Login onEntrar={entrouNoCorujal} onVoltar={() => void irPara("abertura")} />}
 
           {fase === "cartas" && (
-            <Cartas onSair={sair} onReverCerimonia={reverCerimonia} onCartaAberta={() => trilha.efeito("carta")} />
+            <Cartas onSair={sair} onCartaAberta={() => trilha.efeito("carta")} />
           )}
         </section>
       </main>

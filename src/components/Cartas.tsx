@@ -1,18 +1,32 @@
-import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import { CARTAS } from "../data/cartas";
 import { DESPEDIDA, comNome } from "../data/despedida";
-import { HOUSES } from "../data/houses";
-import { FOTO_DIR, asset } from "../config";
+import { FOTO_DIR, VIDEO_NUVENS, VIDEO_NUVENS_VOO, asset } from "../config";
 import type { Carta } from "../types";
 
+gsap.registerPlugin(useGSAP);
+
 /* =========================================================================
-   MURAL DE CARTAS - os envelopes que as corujas deixaram
+   CARTAS - a coruja nas nuvens e os envelopes que saem da sacola
    -------------------------------------------------------------------------
-   Clicar num envelope quebra o selo, abre a aba e a carta sobe e se
-   desenrola em pergaminho. As lidas ficam marcadas neste navegador.
+   Ao entrar, a camera sobe do castelo ate acima das nuvens (video que toca
+   uma vez) e emenda no loop da coruja branca carregando uma sacola de pano.
+   Os envelopes (foto real, public/img/envelope.webp) voam para fora da
+   sacola e se abrem num leque; cada um flutua, inclina em 3D seguindo o
+   mouse e sobe na direcao da camera ao passar o mouse. Clicar abre a carta.
+   As lidas ficam marcadas neste navegador.
    ========================================================================= */
 
 const CHAVE_LIDAS = "chapeu-despedida:lidas";
+const FOTO_ENVELOPE = "img/envelope.webp";
+/** O pergaminho da carta aberta: a mesma foto da carta de login, cortada em tercos pelo CSS. */
+const FOTO_CARTA = { "--foto": `url("${asset("img/carta-pergaminho.webp")}")` } as CSSProperties;
+/** A boca da sacola no quadro do video (fracao de 1920 x 1080): de onde as cartas saem. */
+const SACOLA = { fx: 0.49, fy: 0.44 };
+/** Quanto antes do fim do voo o loop da coruja entra (cruzam num fade). */
+const TROCA_S = 0.7;
 
 function lerLidas(): Set<number> {
   try {
@@ -32,54 +46,147 @@ function salvarLidas(lidas: Set<number>): void {
   }
 }
 
-/** Cor da cera do selo: a da casa, ou o vermelho-lacre classico. */
-function corSelo(c: Carta): string {
-  return c.casa ? HOUSES[c.casa].cor2 : "#7a1414";
+function semMovimento(): boolean {
+  return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-/** Inclinacao e atraso de cada envelope: estavel, sem Math.random. */
-function jeito(i: number): CSSProperties {
-  const r = Math.sin(i * 12.9898 + 4.1) * 43758.5453;
-  const f = r - Math.floor(r);
-  return {
-    "--inclina": `${(f - 0.5) * 7}deg`,
-    "--atraso": `${0.15 + i * 0.12}s`,
-  } as CSSProperties;
+interface Lugar {
+  /** Centro do envelope, em % da tela. */
+  x: number;
+  y: number;
+  /** Inclinacao, em graus. */
+  r: number;
+  /** Profundidade: as de perto vem na direcao da camera. */
+  z: number;
+  /** Tamanho relativo (as de longe ficam menores). */
+  s: number;
 }
 
-const iniciais = (nome: string): string =>
-  nome
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase() ?? "")
-    .join("");
+/**
+ * Onde cada carta cai: espalhadas pelo ceu, sem padrao, longe da coruja
+ * (o centro de cima). Mais cartas que lugares ganham um lugar vizinho com
+ * um desvio estavel, sem Math.random.
+ */
+/*
+ * A profundidade (z) empurra a carta para longe do centro da tela por causa
+ * da perspectiva: as das pontas ficam rasas, as do meio podem vir mais perto.
+ */
+const LUGARES_TELA: readonly Lugar[] = [
+  { x: 37, y: 58, r: -14, z: 10, s: 0.92 },
+  { x: 43, y: 76, r: 8, z: 40, s: 1.02 },
+  { x: 55, y: 62, r: -5, z: 30, s: 0.9 },
+  { x: 63, y: 77, r: 13, z: 40, s: 1.02 },
+  { x: 66, y: 55, r: -10, z: 10, s: 0.92 },
+  { x: 31, y: 74, r: 16, z: 10, s: 0.98 },
+  { x: 53, y: 81, r: -8, z: 50, s: 1.02 },
+  { x: 27, y: 53, r: 18, z: 0, s: 0.84 },
+  { x: 72, y: 68, r: -16, z: 0, s: 0.94 },
+  { x: 74, y: 47, r: 11, z: 0, s: 0.82 },
+];
+/** Em pe: fileiras de 3 e 2 alternadas, mais para o meio da tela. */
+const LUGARES_RETRATO: readonly Lugar[] = [
+  { x: 24, y: 46, r: -10, z: 0, s: 0.94 },
+  { x: 50, y: 49, r: 5, z: 10, s: 0.96 },
+  { x: 76, y: 45, r: -7, z: 0, s: 0.94 },
+  { x: 37, y: 58, r: 9, z: 10, s: 0.98 },
+  { x: 63, y: 59, r: -10, z: 10, s: 0.98 },
+  { x: 24, y: 69, r: 10, z: 0, s: 1 },
+  { x: 50, y: 70, r: -5, z: 20, s: 1.02 },
+  { x: 76, y: 69, r: 9, z: 0, s: 1 },
+  { x: 37, y: 80, r: -8, z: 10, s: 1.02 },
+  { x: 63, y: 81, r: 7, z: 10, s: 1.02 },
+];
+
+function lugares(n: number, retrato: boolean): Lugar[] {
+  const base = retrato ? LUGARES_RETRATO : LUGARES_TELA;
+  return Array.from({ length: n }, (_, i) => {
+    const l = base[i % base.length]!;
+    const volta = Math.floor(i / base.length);
+    if (!volta) return l;
+    const f = Math.sin(i * 12.9898) * 43758.5453;
+    const d = f - Math.floor(f) - 0.5;
+    return { ...l, x: Math.min(92, Math.max(8, l.x + d * 14)), y: Math.min(90, l.y + 6 * volta), r: l.r + d * 20 };
+  });
+}
+
+/** Onde um ponto do video (object-fit: cover) cai na tela. */
+function pontoNaTela(fx: number, fy: number): { x: number; y: number } {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const escala = Math.max(w / 1920, h / 1080);
+  return { x: (w - 1920 * escala) / 2 + fx * 1920 * escala, y: (h - 1080 * escala) / 2 + fy * 1080 * escala };
+}
+
+/** Mesma regra do CSS (max-aspect-ratio: 9/10): no celular a largura so fica certa depois da carga. */
+const MIDIA_RETRATO = "(max-aspect-ratio: 9/10)";
+
+function useRetrato(): boolean {
+  const [retrato, setRetrato] = useState(() => typeof window !== "undefined" && window.matchMedia(MIDIA_RETRATO).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(MIDIA_RETRATO);
+    const medir = (): void => setRetrato(mq.matches);
+    medir();
+    mq.addEventListener("change", medir);
+    window.addEventListener("resize", medir);
+    return () => {
+      mq.removeEventListener("change", medir);
+      window.removeEventListener("resize", medir);
+    };
+  }, []);
+  return retrato;
+}
 
 interface EnvelopeProps {
   carta: Carta;
   indice: number;
+  lugar: Lugar;
   lida: boolean;
   onAbrir: () => void;
 }
 
-function Envelope({ carta, indice, lida, onAbrir }: EnvelopeProps) {
+function Envelope({ carta, indice, lugar, lida, onAbrir }: EnvelopeProps) {
+  const corpo = useRef<HTMLSpanElement>(null);
+
+  // inclina na direcao do mouse, como se a carta estivesse na mao
+  const inclinar = (e: PointerEvent<HTMLButtonElement>): void => {
+    if (e.pointerType !== "mouse" || !corpo.current) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    corpo.current.style.setProperty("--ry", `${px * 22}deg`);
+    corpo.current.style.setProperty("--rx", `${-py * 22}deg`);
+  };
+  const soltar = (): void => {
+    corpo.current?.style.setProperty("--ry", "0deg");
+    corpo.current?.style.setProperty("--rx", "0deg");
+  };
+
   return (
     <button
       type="button"
-      className={`envelope${lida ? " lida" : ""}`}
-      style={{ ...jeito(indice), "--cera": corSelo(carta) } as CSSProperties}
+      className={`ev${lida ? " lida" : ""}`}
+      style={
+        {
+          "--x": `${lugar.x}%`,
+          "--y": `${lugar.y}%`,
+          "--r": `${lugar.r}deg`,
+          "--z": `${lugar.z}px`,
+          "--s": lugar.s,
+          "--dur": `${5.5 + (indice % 3) * 0.9}s`,
+          "--atraso": `${-indice * 1.3}s`,
+        } as CSSProperties
+      }
       onClick={onAbrir}
+      onPointerMove={inclinar}
+      onPointerLeave={soltar}
       aria-label={`Carta de ${carta.de}${lida ? " (lida)" : ""}`}
     >
-      <span className="envelope-corpo">
-        <span className="envelope-aba" />
-        <span className="envelope-para">Para {DESPEDIDA.nome}</span>
-        <span className="envelope-de">{carta.de}</span>
-        {carta.cargo && <span className="envelope-cargo">{carta.cargo}</span>}
-        <span className="selo">
-          <span>{iniciais(carta.de)}</span>
+      <span className="ev-flutua">
+        <span className="ev-corpo" ref={corpo}>
+          <img src={asset(FOTO_ENVELOPE)} alt="" draggable={false} />
+          <span className="ev-de">{carta.de}</span>
+          {lida && <span className="ev-lida">lida</span>}
         </span>
-        {lida && <span className="envelope-lida">lida</span>}
       </span>
     </button>
   );
@@ -89,15 +196,20 @@ interface CartaAbertaProps {
   carta: Carta;
   indice: number;
   total: number;
-  /** false ao navegar entre cartas: vai direto ao pergaminho. */
+  /** true na primeira abertura: a carta chega dobrada e desdobra. */
   envelope: boolean;
   onFechar: () => void;
   onAnterior: () => void;
   onProxima: () => void;
 }
 
+/**
+ * A carta aberta: o mesmo pergaminho de foto da carta de login, dobrado em
+ * tres. Na primeira abertura ele chega dobrado e desdobra; depois a escrita
+ * aparece em tinta sobre o papel. Navegar entre cartas so troca a escrita.
+ */
 function CartaAberta({ carta, indice, total, envelope, onFechar, onAnterior, onProxima }: CartaAbertaProps) {
-  const [etapa, setEtapa] = useState<"envelope" | "pergaminho">(envelope ? "envelope" : "pergaminho");
+  const palco = useRef<HTMLDivElement>(null);
   const paragrafos = useMemo(
     () =>
       comNome(carta.texto)
@@ -112,16 +224,6 @@ function CartaAberta({ carta, indice, total, envelope, onFechar, onAnterior, onP
   );
 
   useEffect(() => {
-    if (!envelope) {
-      setEtapa("pergaminho");
-      return;
-    }
-    setEtapa("envelope");
-    const t = setTimeout(() => setEtapa("pergaminho"), 1650);
-    return () => clearTimeout(t);
-  }, [carta, envelope]);
-
-  useEffect(() => {
     const tecla = (e: KeyboardEvent): void => {
       if (e.key === "Escape") onFechar();
       else if (e.key === "ArrowRight") onProxima();
@@ -131,73 +233,184 @@ function CartaAberta({ carta, indice, total, envelope, onFechar, onAnterior, onP
     return () => window.removeEventListener("keydown", tecla);
   }, [onFechar, onProxima, onAnterior]);
 
+  useGSAP(
+    () => {
+      const escrita = ".cl-escrita > *";
+      if (!envelope || semMovimento()) {
+        gsap.from(escrita, { autoAlpha: 0, y: 6, duration: 0.6, stagger: 0.06, ease: "power2.out" });
+        return;
+      }
+      const tl = gsap.timeline({ defaults: { ease: "power3.inOut" } });
+      tl.from(".cl", { y: 140, rotate: 6, scale: 0.8, autoAlpha: 0, duration: 1, ease: "power3.out" })
+        // abre como a carta de login: primeiro a aba de cima, depois a de baixo
+        .from(".cl .lc-topo", { rotateX: -179, duration: 1 }, "-=0.2")
+        .from(".cl .lc-base", { rotateX: 179, duration: 1 }, "-=0.45")
+        .set([".cl .lc-topo", ".cl .lc-base"], { clearProps: "transform" })
+        // a tinta aparece no papel, linha por linha
+        .from(escrita, { autoAlpha: 0, y: 6, filter: "blur(3px)", duration: 0.8, stagger: 0.12, ease: "power2.out" }, "-=0.3")
+        .from([".cl-fechar", ".cl-nav"], { autoAlpha: 0, duration: 0.6 }, "<");
+    },
+    { scope: palco, dependencies: [indice, envelope] }
+  );
+
   return (
     <div className="carta-overlay" role="dialog" aria-modal="true" aria-label={`Carta de ${carta.de}`} onClick={onFechar}>
-      {etapa === "envelope" ? (
-        <div className="abrindo-envelope" style={{ "--cera": corSelo(carta) } as CSSProperties} key={`e${indice}`}>
-          <div className="ae-fundo" />
-          <div className="ae-carta" />
-          <div className="ae-frente" />
-          <div className="ae-aba" />
-          <div className="ae-selo">
-            <span>{iniciais(carta.de)}</span>
-          </div>
-        </div>
-      ) : (
-        <article className="pergaminho" key={`p${indice}`} onClick={(e) => e.stopPropagation()}>
-          <button type="button" className="fechar" aria-label="Fechar carta" onClick={onFechar}>
-            ×
-          </button>
-          <div className="pergaminho-rolo pergaminho-rolo--topo" aria-hidden="true" />
-          <div className="pergaminho-miolo">
-            <p className="pergaminho-data">{data}</p>
-            {carta.foto && (
-              <figure className="polaroid">
-                <img src={asset(FOTO_DIR + carta.foto)} alt={`Foto enviada por ${carta.de}`} />
-              </figure>
-            )}
-            {paragrafos.map((p, i) => (
-              <p key={i} className="pergaminho-texto" style={{ animationDelay: `${0.5 + i * 0.25}s` }}>
-                {p}
+      <div className="cl-palco" ref={palco} onClick={(e) => e.stopPropagation()}>
+        <article className="cl" style={FOTO_CARTA}>
+          <div className="lc-folha">
+            <section className="lc-painel lc-topo" aria-hidden="true">
+              <div className="lc-frente" />
+              <div className="lc-verso" />
+            </section>
+            <section className="lc-painel lc-meio" aria-hidden="true">
+              <div className="lc-frente" />
+            </section>
+            <section className="lc-painel lc-base" aria-hidden="true">
+              <div className="lc-frente" />
+              <div className="lc-verso" />
+            </section>
+
+            {/* a escrita, por cima dos tres tercos (o lacre e o da foto) */}
+            <div className="cl-escrita" key={indice}>
+              <p className="cl-cabecalho">
+                <span aria-hidden="true">✦</span>
+                Correio Coruja
+                <span aria-hidden="true">✦</span>
               </p>
-            ))}
-            <div className="assinatura" style={{ animationDelay: `${0.6 + paragrafos.length * 0.25}s` }}>
-              <span className="assinatura-nome">{carta.de}</span>
-              {carta.cargo && <span className="assinatura-cargo">{carta.cargo}</span>}
+              <p className="cl-data">{data}</p>
+              <div className="cl-corpo">
+                {carta.foto && (
+                  <figure className="cl-foto">
+                    <img src={asset(FOTO_DIR + carta.foto)} alt={`Foto enviada por ${carta.de}`} />
+                  </figure>
+                )}
+                {paragrafos.map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
+              </div>
+              <div className="cl-assinatura">
+                <strong>{carta.de}</strong>
+                {carta.cargo && <span>{carta.cargo}</span>}
+              </div>
             </div>
           </div>
-          <div className="pergaminho-rolo pergaminho-rolo--base" aria-hidden="true" />
-          {total > 1 && (
-            <nav className="pergaminho-nav">
-              <button type="button" className="btn btn-ghost" onClick={onAnterior}>
-                ‹ Anterior
-              </button>
-              <span>
-                {indice + 1} / {total}
-              </span>
-              <button type="button" className="btn btn-ghost" onClick={onProxima}>
-                Próxima ›
-              </button>
-            </nav>
-          )}
+          <button type="button" className="cl-fechar" aria-label="Fechar carta" onClick={onFechar}>
+            ×
+          </button>
         </article>
-      )}
+
+        {total > 1 && (
+          <nav className="cl-nav">
+            <button type="button" className="btn btn-ghost" onClick={onAnterior}>
+              ‹ Anterior
+            </button>
+            <span>
+              {indice + 1} / {total}
+            </span>
+            <button type="button" className="btn btn-ghost" onClick={onProxima}>
+              Próxima ›
+            </button>
+          </nav>
+        )}
+      </div>
     </div>
   );
 }
 
 interface CartasProps {
   onSair: () => void;
-  onReverCerimonia: () => void;
   /** Toca o sino de carta aberta. */
   onCartaAberta: () => void;
 }
 
-export default function Cartas({ onSair, onReverCerimonia, onCartaAberta }: CartasProps) {
+export default function Cartas({ onSair, onCartaAberta }: CartasProps) {
   const [aberta, setAberta] = useState<number | null>(null);
   const [comEnvelope, setComEnvelope] = useState(true);
   const [lidas, setLidas] = useState<Set<number>>(lerLidas);
+  // "voo": subindo do castelo; "nuvens": a coruja em loop e as cartas no ar
+  const [etapa, setEtapa] = useState<"voo" | "nuvens">(() => (semMovimento() ? "nuvens" : "voo"));
+  const raiz = useRef<HTMLDivElement>(null);
+  const voo = useRef<HTMLVideoElement>(null);
+  const loop = useRef<HTMLVideoElement>(null);
+  const retrato = useRetrato();
   const total = CARTAS.length;
+  const posicoes = useMemo(() => lugares(total, retrato), [total, retrato]);
+
+  /* ---------- o voo ate as nuvens, e a coruja em loop ---------- */
+  const irParaNuvens = useCallback((): void => {
+    const l = loop.current;
+    if (l) {
+      l.currentTime = 0;
+      void l.play().catch(() => {});
+    }
+    setEtapa("nuvens");
+  }, []);
+
+  useEffect(() => {
+    if (etapa !== "voo") return;
+    const v = voo.current;
+    if (!v) return;
+    let foi = false;
+    const trocar = (): void => {
+      if (foi) return;
+      foi = true;
+      irParaNuvens();
+    };
+    const tempo = (): void => {
+      if (Number.isFinite(v.duration) && v.duration - v.currentTime < TROCA_S) trocar();
+    };
+    v.addEventListener("timeupdate", tempo);
+    v.addEventListener("ended", trocar);
+    v.addEventListener("error", trocar);
+    void v.play().catch(trocar);
+    return () => {
+      v.removeEventListener("timeupdate", tempo);
+      v.removeEventListener("ended", trocar);
+      v.removeEventListener("error", trocar);
+    };
+  }, [etapa, irParaNuvens]);
+
+  /* ---------- as cartas saem da sacola e se abrem em leque ---------- */
+  useGSAP(
+    () => {
+      if (etapa !== "nuvens") return;
+      const calmo = semMovimento();
+      const boca = pontoNaTela(SACOLA.fx, SACOLA.fy);
+      const tl = gsap.timeline({ delay: calmo ? 0 : 0.35 });
+      tl.fromTo(
+        ".ev",
+        {
+          x: (_: number, el: Element) => {
+            const r = el.getBoundingClientRect();
+            return calmo ? 0 : boca.x - (r.left + r.width / 2);
+          },
+          y: (_: number, el: Element) => {
+            const r = el.getBoundingClientRect();
+            return calmo ? 0 : boca.y - (r.top + r.height / 2);
+          },
+          scale: calmo ? 1 : 0.18,
+          rotate: (i: number) => (calmo ? 0 : (i % 2 ? 1 : -1) * (40 + i * 9)),
+          autoAlpha: 0,
+        },
+        {
+          x: 0,
+          y: 0,
+          scale: 1,
+          rotate: 0,
+          autoAlpha: 1,
+          duration: calmo ? 0.5 : 1.5,
+          ease: "power3.out",
+          stagger: calmo ? 0 : 0.13,
+        }
+      ).fromTo(
+        [".mural-topo > *", ".mural-dica", ".mural-rodape > *"],
+        { autoAlpha: 0, y: 10 },
+        { autoAlpha: 1, y: 0, duration: 1, stagger: 0.08, ease: "power2.out" },
+        "-=0.9"
+      );
+    },
+    { scope: raiz, dependencies: [etapa, retrato] }
+  );
 
   const abrir = useCallback(
     (i: number, envelope = true): void => {
@@ -222,29 +435,53 @@ export default function Cartas({ onSair, onReverCerimonia, onCartaAberta }: Cart
   const cartaAberta = aberta === null ? undefined : CARTAS[aberta];
 
   return (
-    <div className="mural">
+    <div className={`mural mural--${etapa}${aberta !== null ? " mural--lendo" : ""}`} ref={raiz}>
+      <div className="mural-fundo" aria-hidden="true">
+        <video
+          ref={loop}
+          className={`mural-video${etapa === "nuvens" ? " on" : ""}`}
+          src={asset(VIDEO_NUVENS)}
+          muted
+          loop
+          playsInline
+          autoPlay={etapa === "nuvens"}
+          preload="auto"
+        />
+        <video
+          ref={voo}
+          className={`mural-video mural-video--voo${etapa === "voo" ? " on" : ""}`}
+          src={asset(VIDEO_NUVENS_VOO)}
+          muted
+          playsInline
+          preload="auto"
+        />
+      </div>
+
       <header className="mural-topo">
         <p className="eyebrow">Correio Coruja</p>
         <h1 className="mural-titulo">
           Cartas para <span>{DESPEDIDA.nome}</span>
         </h1>
-        <p className="mural-sub">
-          {lidas.size >= total
-            ? "Você leu todas. Elas ficam guardadas aqui sempre que quiser voltar."
-            : "Toque num envelope para quebrar o selo."}
-        </p>
       </header>
 
-      <div className="mural-grade">
+      <div className="mural-ceu">
         {CARTAS.map((c, i) => (
-          <Envelope key={i} carta={c} indice={i} lida={lidas.has(i)} onAbrir={() => abrir(i)} />
+          <Envelope
+            key={i}
+            carta={c}
+            indice={i}
+            lugar={posicoes[i]!}
+            lida={lidas.has(i)}
+            onAbrir={() => abrir(i)}
+          />
         ))}
       </div>
 
+      <p className="mural-dica">
+        {lidas.size >= total ? "Você leu todas. Elas ficam aqui sempre que quiser voltar." : "Escolha uma carta para abrir"}
+      </p>
+
       <footer className="mural-rodape">
-        <button type="button" className="btn btn-ghost" onClick={onReverCerimonia}>
-          Rever a cerimônia
-        </button>
         <button type="button" className="btn btn-ghost" onClick={onSair}>
           Sair
         </button>

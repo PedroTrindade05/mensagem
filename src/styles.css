@@ -174,10 +174,16 @@ img, svg { -webkit-user-drag: none; user-select: none; }
   transform: scale(1.03);
 }
 .cena-3d-camada { transition: opacity 1400ms ease, filter 1.2s var(--ease), transform 1.2s var(--ease); }
-[data-fase="login"] .scrim::after,
 [data-fase="cartas"] .scrim::after {
   opacity: 1;
   background: radial-gradient(ellipse at 50% 40%, rgba(10, 6, 3, .35), rgba(5, 3, 2, .82));
+}
+/* login: o castelo em loop atras da carta, so um pouco desfocado e com uma
+   sombra leve no centro para a carta saltar do fundo */
+[data-fase="login"] .video-camada { filter: blur(1.5px); transform: scale(1.02); }
+[data-fase="login"] .scrim::after {
+  opacity: 1;
+  background: radial-gradient(ellipse 55% 60% at 50% 50%, rgba(0, 0, 0, .38), rgba(0, 0, 0, .12) 70%, rgba(0, 0, 0, .3) 100%);
 }
 
 /* =========================================================================
@@ -754,24 +760,6 @@ img, svg { -webkit-user-drag: none; user-select: none; }
   0%, 55% { background-position: 100% 0; }
   85%, 100% { background-position: 0% 0; }
 }
-/* a dedicatoria: reta, com o fim em destaque pela cor */
-.rv-dedica {
-  max-width: 24ch;
-  margin: .4vh 0 0;
-  font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
-  font-weight: 400;
-  font-size: clamp(1.35rem, 2.3vw, 1.85rem);
-  line-height: 1.25;
-  color: rgba(246, 236, 214, .9);
-  text-wrap: balance;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, .9);
-}
-.rv-palavra { display: inline-block; }
-.rv-dedica-destaque {
-  font-weight: 600;
-  color: #f2c879;
-  text-shadow: 0 0 22px rgba(255, 170, 70, .35), 0 2px 14px rgba(0, 0, 0, .9);
-}
 /* losango entre dois fios */
 .rv-ornamento {
   display: flex;
@@ -793,129 +781,6 @@ img, svg { -webkit-user-drag: none; user-select: none; }
   box-shadow: 0 0 10px rgba(255, 180, 90, .5);
 }
 
-/* ---------- a carta: envelope de papel com lacre de cera ---------- */
-.rv-carta {
-  --abre: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  margin-top: clamp(14px, 3vh, 30px);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-/* so abre com mouse: no celular o "hover" fica grudado onde foi o ultimo toque */
-@media (hover: hover) and (pointer: fine) {
-  .rv-carta:hover { --abre: 1; }
-  .rv-carta:hover .rv-env { transform: translateY(-4px) rotate(-1.5deg); }
-}
-.rv-carta:focus-visible { --abre: 1; }
-.rv-carta:focus-visible { outline: 1px solid rgba(242, 200, 121, .8); outline-offset: 10px; border-radius: 6px; }
-.rv-carta-flutua { display: block; }
-.rv-env {
-  position: relative;
-  display: block;
-  width: clamp(170px, 15vw, 214px);
-  aspect-ratio: 1.55;
-  filter: drop-shadow(0 18px 22px rgba(0, 0, 0, .55)) drop-shadow(0 0 30px rgba(255, 180, 90, .14));
-  transition: transform .6s var(--ease-out);
-}
-.rv-env > span { position: absolute; display: block; }
-.rv-env-fundo {
-  inset: 0;
-  border-radius: 4px;
-  background: linear-gradient(170deg, #d9c193, #b99c66);
-}
-/* a carta sai um pouco quando a aba abre */
-.rv-env-papel {
-  left: 8%;
-  right: 8%;
-  top: 8%;
-  height: 78%;
-  padding: 12% 10% 0;
-  display: grid !important;
-  align-content: start;
-  gap: 9%;
-  border-radius: 2px;
-  background: var(--grao), linear-gradient(175deg, #fbf3e0, #ecdcb6);
-  background-size: 220px 220px, cover;
-  transform: translateY(calc(var(--abre) * -24%));
-  transition: transform .7s var(--ease-out) .08s;
-  z-index: 1;
-}
-.rv-env-papel i {
-  display: block;
-  height: 2px;
-  border-radius: 2px;
-  background: rgba(110, 76, 34, .35);
-}
-.rv-env-papel i:nth-child(2) { width: 82%; }
-.rv-env-papel i:nth-child(3) { width: 60%; }
-/* a frente do envelope: dobras laterais e de baixo */
-.rv-env-frente {
-  inset: 0;
-  border-radius: 4px;
-  background:
-    linear-gradient(to top right, transparent 49.4%, rgba(90, 60, 25, .18) 50%, transparent 50.6%),
-    linear-gradient(to top left, transparent 49.4%, rgba(90, 60, 25, .18) 50%, transparent 50.6%),
-    var(--grao),
-    linear-gradient(170deg, #f1e3c3, #d8c193);
-  background-size: 100% 100%, 100% 100%, 220px 220px, cover;
-  clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
-  z-index: 2;
-}
-/* a aba de cima: gira para tras ao abrir */
-.rv-env-aba {
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 56%;
-  background: var(--grao), linear-gradient(180deg, #e9d6ab, #cdb27d);
-  background-size: 220px 220px, cover;
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  transform-origin: 50% 0;
-  /* aberta, a aba vira para cima so ate a metade e fica atras da carta */
-  transform: rotateX(calc(var(--abre) * 128deg));
-  transition: transform .7s var(--ease-out), z-index 0s .2s;
-  filter: drop-shadow(0 2px 2px rgba(60, 40, 15, .25));
-  z-index: calc(4 - var(--abre) * 4);
-}
-/* lacre de cera, com a inicial dela em relevo */
-.rv-env-selo {
-  left: 50%;
-  top: 46%;
-  width: 22%;
-  aspect-ratio: 1;
-  margin: -11% 0 0 -11%;
-  display: grid !important;
-  place-items: center;
-  border-radius: 47% 53% 50% 50% / 52% 46% 54% 48%;
-  background: radial-gradient(circle at 38% 32%, #c8423a, #8e1a19 55%, #5c0d0e);
-  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, .12), inset 0 -3px 6px rgba(0, 0, 0, .35), 0 3px 6px rgba(0, 0, 0, .4);
-  font-family: var(--font-title);
-  font-weight: 700;
-  font-size: clamp(.9rem, 1.2vw, 1.1rem);
-  color: rgba(255, 210, 190, .55);
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, .45), 0 1px 0 rgba(255, 200, 180, .25);
-  z-index: 5;
-  transform: scale(calc(1 - var(--abre) * .12)) translateY(calc(var(--abre) * 30%));
-  opacity: calc(1 - var(--abre) * .9);
-  transition: transform .5s var(--ease-out), opacity .4s;
-}
-
-/* ---------- o convite ---------- */
-.rv-convite {
-  display: grid;
-  justify-items: center;
-  gap: 14px;
-  margin-top: .4vh;
-}
-.rv-convite p {
-  margin: 0;
-  font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
-  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
-  color: rgba(236, 222, 192, .82);
-  text-shadow: 0 2px 10px rgba(0, 0, 0, .9);
-}
 .rv-abrir {
   position: relative;
   display: inline-flex;
@@ -972,11 +837,8 @@ img, svg { -webkit-user-drag: none; user-select: none; }
 @media (max-aspect-ratio: 4/5) {
   .revelacao { justify-items: center; align-items: end; padding-bottom: 4vh; }
   .crest { width: clamp(100px, 16vh, 160px); }
-  .rv-box { gap: 8px; }
+  .rv-box { gap: 10px; }
   .rv-nome { font-size: clamp(3.4rem, 17vw, 5.4rem); }
-  .rv-dedica { font-size: clamp(1.15rem, 5vw, 1.4rem); }
-  .rv-ornamento { display: none; }
-  .rv-env { width: clamp(120px, 34vw, 150px); }
   .rv-abrir { padding: 13px 24px; font-size: .68rem; letter-spacing: .24em; }
 }
 
@@ -1000,315 +862,496 @@ body[data-house="lufalufa"]   { --house-1: #f5cf6d; --house-2: #726255; --house-
 }
 
 /* =========================================================================
-   LOGIN
+   LOGIN - a carta e uma foto de pergaminho, cortada nas proprias dobras
+   -------------------------------------------------------------------------
+   public/img/carta-pergaminho.webp (1000 x 1475, fundo transparente). As
+   dobras da foto ficam em 33.2% e 65% da altura: cada terco e um painel
+   que mostra a sua fatia da imagem e dobra de verdade na entrada. --w e a
+   largura da carta; toda medida interna e proporcional a ela.
    ========================================================================= */
 .login {
   height: 100%;
   display: grid;
   place-items: center;
-  padding: 24px 16px;
+  padding: 20px 16px;
   overflow-y: auto;
+  perspective: 1700px;
 }
-.login-carta {
+.lc {
+  --w: min(500px, 92vw, calc((100svh - 90px) * .678));
+  --tinta: #2a2116;
+  --tinta-verde: #1d4630;
+  --tinta-clara: #5e4a2e;
   position: relative;
-  width: min(430px, 100%);
+  width: var(--w);
   display: grid;
-  gap: 14px;
   justify-items: center;
-  padding: 58px clamp(22px, 5vw, 42px) 26px;
-  color: var(--ink);
+  gap: 14px;
+  transform-style: preserve-3d;
+}
+.lc-folha {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1000 / 1475;
+  transform-style: preserve-3d;
+  transform: rotate(-.8deg);
+}
+/* sombra da carta, como se estivesse sobre uma mesa */
+.lc-folha::before {
+  content: "";
+  position: absolute;
+  inset: 4% 3% 0;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, .6);
+  filter: blur(28px);
+  transform: translateZ(-60px) translateY(12px);
+}
+.lc-painel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  transform-style: preserve-3d;
+}
+.lc-topo { top: 0; height: 33.2%; transform-origin: 50% 100%; z-index: 3; }
+.lc-meio { top: 33.2%; height: 31.8%; z-index: 1; }
+.lc-base { top: 65%; height: 35%; transform-origin: 50% 0; z-index: 2; }
+/* a fatia da foto que cabe a cada terco */
+.lc-frente,
+.lc-verso {
+  position: absolute;
+  inset: 0;
+  background-image: var(--foto);
+  background-repeat: no-repeat;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.lc-topo .lc-frente, .lc-topo .lc-verso { background-size: 100% 301.2%; background-position: 50% 0%; }
+.lc-meio .lc-frente { background-size: 100% 314.5%; background-position: 50% 48.68%; }
+.lc-base .lc-frente, .lc-base .lc-verso { background-size: 100% 285.7%; background-position: 50% 100%; }
+/* o verso: o mesmo papel visto por tras, mais escuro */
+.lc-verso {
+  transform: rotateX(180deg);
+  filter: brightness(.78) saturate(.85);
+}
+.lc-frente {
+  display: grid;
+  justify-items: center;
+  align-content: start;
   text-align: center;
+  padding: 0 calc(var(--w) * .1);
+  color: var(--tinta);
+}
+.lc-topo .lc-frente { gap: calc(var(--w) * .016); padding-top: calc(var(--w) * .085); }
+.lc-meio .lc-frente { gap: calc(var(--w) * .022); padding-top: calc(var(--w) * .05); }
+.lc-base .lc-frente {
+  grid-template-columns: 1fr;
+  justify-items: start;
+  gap: calc(var(--w) * .05);
+  padding-top: calc(var(--w) * .07);
+  padding-right: calc(var(--w) * .26);
+}
+
+/* ---------- a tinta: escura, um pouco fosca, entrando no papel ---------- */
+.lc-cabecalho,
+.lc-endereco,
+.lc-saudacao,
+.lc-texto,
+.lc-campo > span:first-child,
+.lc-campo input,
+.lc-erro,
+.lc-assinatura {
+  mix-blend-mode: multiply;
+}
+.lc-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--w) * .024);
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: calc(var(--w) * .022);
+  font-weight: 600;
+  letter-spacing: .42em;
+  padding-left: .42em;
+  text-transform: uppercase;
+  color: #7a2a1c;
+}
+.lc-cabecalho span { font-size: .85em; letter-spacing: 0; color: #9a6b2e; }
+.lc-endereco {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: calc(var(--w) * .028);
+  color: var(--tinta-verde);
+  opacity: .9;
+}
+.lc-saudacao {
+  justify-self: start;
+  margin: calc(var(--w) * .014) 0 0;
+  font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+  font-weight: 600;
+  font-size: calc(var(--w) * .058);
+  line-height: 1.1;
+  color: var(--tinta-verde);
+}
+.lc-texto {
+  margin: 0;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: calc(var(--w) * .033);
+  line-height: 1.5;
+  color: var(--tinta);
+  text-wrap: pretty;
+}
+
+/* ---------- os campos: linhas escritas no papel ---------- */
+.lc-campo {
+  width: 100%;
+  display: grid;
+  gap: 0;
+  text-align: left;
+}
+.lc-campo > span:first-child {
+  font-family: var(--font-title);
+  font-size: calc(var(--w) * .021);
+  font-weight: 600;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--tinta-clara);
+}
+.lc-campo input {
+  width: 100%;
+  padding: calc(var(--w) * .008) 2px calc(var(--w) * .006);
+  border: 0;
+  border-bottom: 1.5px dotted rgba(50, 35, 15, .6);
+  background: transparent;
+  font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+  font-size: max(16px, calc(var(--w) * .05));
+  font-weight: 600;
+  color: var(--tinta-verde);
+  caret-color: #7a1414;
+  outline: none;
+  transition: border-color .3s;
+}
+.lc-campo input:focus { border-bottom: 1.5px solid #6d2418; }
+.lc-senha { position: relative; display: block; }
+.lc-senha input { padding-right: 38px; }
+.lc-olho {
+  position: absolute;
+  right: 0;
+  bottom: 2px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: none;
+  color: var(--tinta-clara);
+  cursor: pointer;
+}
+.lc-olho:focus-visible { outline: 1px solid #7a2a1c; border-radius: 4px; }
+.lc-erro {
+  min-height: 1.4em;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: calc(var(--w) * .03);
+  line-height: 1.35;
+  color: #8c1d1d;
+}
+.lc-dica { display: block; color: var(--tinta-clara); }
+
+/* ---------- o pe: botao e assinatura (o lacre e o da foto, a direita) ---------- */
+.lc-enviar {
+  justify-self: stretch;
+  padding: calc(var(--w) * .026) calc(var(--w) * .04);
+  border: 1px solid rgba(60, 25, 10, .65);
   border-radius: 3px;
-  background-color: var(--paper);
-  background-image:
-    var(--manchas),
-    var(--grao),
-    radial-gradient(ellipse at 30% 15%, rgba(255, 250, 235, .55), transparent 60%),
-    linear-gradient(170deg, #f3e7cc, #dcc597);
-  background-size: cover, 220px 220px, cover, cover;
-  box-shadow:
-    0 30px 70px rgba(0, 0, 0, .7),
-    0 0 0 1px rgba(90, 60, 25, .25),
-    inset 0 0 60px rgba(120, 80, 30, .35);
-  animation: cartaChega 1.1s var(--ease-out) both;
+  background: linear-gradient(180deg, #6e2a1c, #4a170d);
+  color: #f6e3c0;
+  font-family: var(--font-title);
+  font-size: max(11px, calc(var(--w) * .024));
+  font-weight: 600;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(60, 25, 10, .35), inset 0 1px 0 rgba(255, 210, 170, .2);
+  transition: transform .3s var(--ease-out), box-shadow .3s, filter .3s;
 }
-@keyframes cartaChega {
-  from { opacity: 0; transform: translateY(-60px) rotate(-4deg) scale(.95); }
-  to   { opacity: 1; transform: none; }
+.lc-enviar:hover { transform: translateY(-1px); filter: brightness(1.08); }
+.lc-enviar:focus-visible { outline: 2px solid #7a2a1c; outline-offset: 3px; }
+.lc-enviar:disabled { cursor: default; filter: saturate(.8); }
+.lc-assinatura {
+  display: grid;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: calc(var(--w) * .031);
+  line-height: 1.2;
+  color: var(--tinta);
 }
-.login-carta.tremer { animation: tremer .5s ease both; }
+.lc-assinatura strong {
+  font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+  font-weight: 600;
+  font-size: calc(var(--w) * .056);
+  color: var(--tinta-verde);
+}
+/* um brilho quente em cima do lacre da foto, que acende quando a carta abre */
+.lc-lacre-brilho {
+  position: absolute;
+  left: 85.8%;
+  top: 68.6%;
+  width: 26%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 200, 140, .9), rgba(255, 120, 60, .35) 35%, transparent 65%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+}
+.lc-voltar {
+  padding: 6px 10px;
+  border: 0;
+  background: none;
+  font-family: var(--font-title);
+  font-size: .66rem;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: rgba(240, 222, 186, .85);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .9);
+  cursor: pointer;
+}
+.lc-voltar:hover { color: #f6e3c0; }
+.lc-voltar:focus-visible { outline: 1px solid rgba(242, 200, 121, .8); }
+
+/* errou: a carta treme; acertou: o lacre brilha e a carta sobe */
+.lc.tremer .lc-folha { animation: tremer .5s ease both; }
 @keyframes tremer {
-  0%, 100% { transform: none; }
-  20% { transform: translateX(-10px) rotate(-1deg); }
-  40% { transform: translateX(9px) rotate(1deg); }
-  60% { transform: translateX(-6px); }
-  80% { transform: translateX(4px); }
+  0%, 100% { transform: rotate(-.8deg); }
+  20% { transform: translateX(-10px) rotate(-1.8deg); }
+  40% { transform: translateX(9px) rotate(.2deg); }
+  60% { transform: translateX(-6px) rotate(-.8deg); }
+  80% { transform: translateX(4px) rotate(-.8deg); }
 }
-.login-carta.abrindo { animation: cartaSobe 1.5s var(--ease) both; }
+.lc.abrindo .lc-lacre-brilho { animation: lacreAcende 1.2s ease-out both; }
+@keyframes lacreAcende {
+  0% { opacity: 0; transform: scale(.6); }
+  35% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0; transform: scale(1.6); }
+}
+.lc.abrindo { animation: cartaSobe 1.5s var(--ease) .3s both; }
 @keyframes cartaSobe {
   0%   { transform: none; opacity: 1; }
   30%  { transform: scale(1.02); }
-  100% { transform: translateY(-40px) scale(.9); opacity: 0; }
+  100% { transform: translateY(-50px) scale(.92); opacity: 0; }
 }
-.login-carta .eyebrow { color: #8a6a3a; text-shadow: none; letter-spacing: .3em; }
-.login-titulo {
-  margin: -4px 0 0;
-  font-family: var(--font-script);
-  font-weight: 400;
-  font-size: clamp(2.4rem, 7vw, 3.1rem);
-  line-height: 1.1;
-  color: #3a2614;
-}
-.login-sub { margin: -6px 0 6px; font-style: italic; color: var(--ink-soft); font-size: 1rem; }
-
-.login-selo {
-  position: absolute;
-  top: -34px;
-  left: 50%;
-  width: 72px;
-  height: 72px;
-  margin-left: -36px;
-  display: grid;
-  place-items: center;
-  border-radius: 48% 52% 50% 50% / 52% 48% 52% 48%;
-  background: radial-gradient(circle at 35% 30%, #c4413a, #7d1515 55%, #4a0909);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, .45), inset 0 -3px 8px rgba(0, 0, 0, .4), inset 0 3px 6px rgba(255, 160, 140, .35);
-  transition: transform .8s var(--ease), opacity .8s;
-}
-.login-selo span {
-  display: grid;
-  place-items: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 190, 170, .25);
-  font-family: var(--font-display);
-  font-size: 1.6rem;
-  color: rgba(255, 210, 190, .6);
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, .4);
-}
-.abrindo .login-selo { transform: translateY(-14px) rotate(25deg) scale(1.15); opacity: 0; }
-
-.campo {
-  width: 100%;
-  display: grid;
-  gap: 4px;
-  text-align: left;
-}
-.campo > span {
-  font-family: var(--font-title);
-  font-size: .64rem;
-  letter-spacing: .26em;
-  text-transform: uppercase;
-  color: #7b5c31;
-}
-.campo input {
-  width: 100%;
-  padding: 8px 4px 6px;
-  border: 0;
-  border-bottom: 1.5px solid rgba(70, 45, 20, .45);
-  background: transparent;
-  font-family: var(--font-letter);
-  font-size: 1.35rem;
-  font-weight: 600;
-  color: #2b1b0c;
-  caret-color: #7a1414;
-  outline: none;
-  transition: border-color .3s, background .3s;
-}
-.campo input::placeholder { color: rgba(70, 45, 20, .35); font-weight: 400; }
-.campo input:focus { border-bottom-color: #7a1414; background: rgba(255, 250, 235, .35); }
-.campo-senha { position: relative; }
-.campo-senha input { padding-right: 38px; }
-.olho {
-  position: absolute;
-  right: 2px;
-  bottom: 6px;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 0;
-  background: none;
-  color: #7b5c31;
-  cursor: pointer;
-}
-.olho:focus-visible { outline: 1px solid #7a1414; }
-.login-erro {
-  min-height: 1.4em;
-  margin: 0;
-  font-style: italic;
-  font-size: .95rem;
-  color: #8c1d1d;
-}
-.login-erro em { display: block; color: var(--ink-soft); }
-.login-carta .btn-primary {
-  color: #fbe9c6;
-  border-color: #5a3c1a;
-  background: linear-gradient(180deg, #6b3a1d, #3d1f0d);
-  box-shadow: 0 6px 16px rgba(60, 30, 10, .35);
-}
-.login-carta .link-discreto { color: #7b5c31; text-decoration-color: rgba(120, 80, 40, .35); }
 
 /* =========================================================================
    MURAL DE CARTAS
    ========================================================================= */
+/* a pagina inteira e o ceu: os videos cobrem tudo atras da interface */
 .mural {
-  height: 100%;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: clamp(28px, 7vh, 70px) 16px 40px;
-  display: grid;
-  align-content: start;
-  justify-items: center;
-  gap: clamp(20px, 4vh, 40px);
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  perspective: 1200px;
 }
-.mural-topo { display: grid; justify-items: center; gap: 6px; text-align: center; animation: subir 1s var(--ease-out) both; }
+.mural-fundo {
+  position: absolute;
+  inset: 0;
+  /* sem video: um ceu noturno sobre nuvens, em CSS */
+  background:
+    radial-gradient(circle at 80% 18%, rgba(220, 230, 255, .5) 0 4%, transparent 9%),
+    radial-gradient(ellipse 120% 50% at 50% 100%, #2a3550, transparent 70%),
+    linear-gradient(180deg, #060b18, #12203a 60%, #27324c);
+}
+.mural-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity .8s ease;
+}
+.mural-video.on { opacity: 1; }
+/* um veu leve so nas bordas: o titulo e os botoes ficam legiveis */
+.mural-fundo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .45), transparent 18%, transparent 75%, rgba(0, 0, 0, .45)),
+    radial-gradient(ellipse 90% 80% at 50% 50%, transparent 60%, rgba(0, 0, 0, .35));
+  pointer-events: none;
+}
+
+.mural-topo {
+  position: absolute;
+  top: clamp(16px, 3vh, 30px);
+  left: clamp(16px, 3vw, 40px);
+  z-index: 2;
+  display: grid;
+  gap: 4px;
+}
+.mural-topo .eyebrow { margin: 0; }
 .mural-titulo {
   margin: 0;
-  font-family: var(--font-title);
+  font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
   font-weight: 400;
-  font-size: clamp(1.3rem, 3vw, 2rem);
-  letter-spacing: .08em;
-  color: var(--gold-soft);
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  line-height: 1.05;
+  color: rgba(246, 236, 214, .92);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, .8);
 }
-.mural-titulo span {
-  display: block;
-  font-family: var(--font-script);
-  font-size: 2.3em;
-  letter-spacing: 0;
-  line-height: 1.1;
-  color: var(--gold);
-  text-shadow: 0 0 30px rgba(217, 160, 60, .35);
+.mural-titulo span { color: #f2c879; font-weight: 600; }
+.mural-dica {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(64px, 9vh, 84px);
+  z-index: 2;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-title);
+  font-size: .68rem;
+  letter-spacing: .32em;
+  padding-left: .32em;
+  text-transform: uppercase;
+  color: rgba(240, 226, 196, .8);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, .9);
+  pointer-events: none;
 }
-.mural-sub { margin: 0; max-width: 46ch; font-style: italic; color: #cdb88d; }
+.mural-rodape {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(14px, 2.4vh, 24px);
+  z-index: 2;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+/* com uma carta aberta, so ela fica na frente da coruja */
+.mural--lendo .mural-topo,
+.mural--lendo .mural-dica,
+.mural--lendo .mural-rodape { opacity: 0; pointer-events: none; transition: opacity .4s; }
+/* a dica e animada pelo GSAP (opacidade inline): aqui precisa vencer o inline */
+.mural--lendo .mural-dica { opacity: 0 !important; }
+/* antes das cartas sairem da sacola, so o voo aparece */
+.mural--voo .mural-topo,
+.mural--voo .mural-dica,
+.mural--voo .mural-rodape,
+.mural--voo .ev { visibility: hidden; }
 
-.mural-grade {
-  width: min(1180px, 100%);
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr));
-  gap: clamp(22px, 3.4vw, 40px);
-  padding: 10px 6px;
+/* ---------- os envelopes no ar ---------- */
+.mural-ceu {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transform-style: preserve-3d;
+  pointer-events: none;
 }
-.mural-rodape { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-
-/* envelope fechado */
-.envelope {
-  --inclina: 0deg;
-  --atraso: 0s;
-  --cera: #7a1414;
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 1.4;
+/* o GSAP anima este (saida da sacola): nada de transition aqui */
+.ev {
+  /* largura da carta; o lugar (--x, --y) nunca deixa ela passar da borda */
+  --lw: clamp(118px, 10.5vw, 184px);
+  position: absolute;
+  left: clamp(calc(var(--lw) * .8 + 18px), var(--x), calc(100% - var(--lw) * .8 - 18px));
+  top: clamp(calc(var(--lw) * .5 + 70px), var(--y), calc(100% - var(--lw) * .5 - 96px));
+  width: var(--lw);
+  /* centra a carta no ponto (--x, --y) por margem: o GSAP absorve a
+     propriedade translate no transform dele e o -50% se perderia */
+  margin: calc(var(--lw) * -.305) 0 0 calc(var(--lw) / -2);
   padding: 0;
   border: 0;
   background: none;
+  transform-style: preserve-3d;
   cursor: pointer;
-  transform: rotate(var(--inclina));
-  animation: envelopeCai 1s var(--atraso) var(--ease-out) both;
-  transition: transform .45s var(--ease), filter .45s;
-  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, .55));
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
 }
-@keyframes envelopeCai {
-  from { opacity: 0; transform: translateY(-90px) rotate(calc(var(--inclina) * -4)) scale(.9); }
-  to   { opacity: 1; transform: rotate(var(--inclina)); }
+.ev:focus-visible { outline: none; }
+/* cada carta flutua no seu ritmo, levemente inclinada */
+.ev-flutua {
+  display: block;
+  transform-style: preserve-3d;
+  animation: flutuaCarta var(--dur, 6s) var(--atraso, 0s) ease-in-out infinite;
 }
-.envelope:hover,
-.envelope:focus-visible {
-  transform: translateY(-8px) rotate(0deg) scale(1.03);
-  filter: drop-shadow(0 22px 26px rgba(0, 0, 0, .6)) drop-shadow(0 0 22px rgba(217, 178, 90, .25));
-  outline: none;
+@keyframes flutuaCarta {
+  0%, 100% { transform: translateZ(var(--z)) scale(var(--s, 1)) rotate(var(--r)) translateY(0) rotateX(6deg); }
+  50%      { transform: translateZ(var(--z)) scale(var(--s, 1)) rotate(calc(var(--r) + 2.5deg)) translateY(-10px) rotateX(-4deg); }
 }
-.envelope-corpo {
+/* o envelope de verdade: foto, sombra e o nome de quem escreveu */
+.ev-corpo {
+  --rx: 0deg;
+  --ry: 0deg;
+  position: relative;
+  display: block;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform .35s var(--ease-out), filter .35s;
+  filter:
+    drop-shadow(0 14px 16px rgba(0, 0, 0, .55))
+    drop-shadow(0 0 0 rgba(255, 196, 120, 0));
+}
+/* a foto foi feita com luz quente: aqui ela fica sob a luz da lua, como as do video */
+.ev-corpo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: brightness(.84) saturate(.78);
+  transition: filter .35s;
+}
+.ev-de {
   position: absolute;
-  inset: 0;
-  display: grid;
-  align-content: end;
-  justify-items: center;
-  padding: 0 14px 7%;
-  border-radius: 3px;
+  left: 0;
+  right: 0;
+  bottom: 9%;
+  font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(.82rem, 1.05vw, 1.05rem);
+  line-height: 1;
+  color: #23361f;
+  mix-blend-mode: multiply;
+  white-space: nowrap;
   overflow: hidden;
-  color: var(--ink);
-  background-color: var(--paper);
-  background-image:
-    var(--grao),
-    radial-gradient(ellipse at 25% 85%, rgba(255, 250, 235, .45), transparent 60%),
-    linear-gradient(165deg, #f2e5c8, #d9c294);
-  background-size: 220px 220px, cover, cover;
-  box-shadow: inset 0 0 34px rgba(120, 80, 30, .3);
+  text-overflow: ellipsis;
+  padding: 0 10%;
 }
-.envelope-aba {
+.ev-lida {
   position: absolute;
-  inset: 0 0 58% 0;
-  background:
-    linear-gradient(180deg, rgba(0, 0, 0, .05), rgba(0, 0, 0, .14)),
-    linear-gradient(165deg, #e6d4ad, #cdb282);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .2));
-}
-.envelope-para {
-  position: relative;
+  top: 7%;
+  right: 7%;
+  padding: 2px 7px;
+  border: 1px solid rgba(80, 50, 20, .45);
+  border-radius: 999px;
   font-family: var(--font-title);
-  font-size: .58rem;
-  letter-spacing: .26em;
-  text-transform: uppercase;
-  color: #8a6a3a;
-}
-.envelope-de {
-  position: relative;
-  font-family: var(--font-script);
-  font-size: clamp(1.7rem, 2.6vw, 2.1rem);
-  line-height: 1.2;
-  color: #2f1d0c;
-}
-.envelope-cargo {
-  position: relative;
-  font-style: italic;
-  font-size: .85rem;
-  color: var(--ink-soft);
-}
-/* o selo fica na ponta da aba */
-.selo {
-  position: absolute;
-  top: calc(42% - 24px);
-  left: 50%;
-  width: 48px;
-  height: 48px;
-  margin-left: -24px;
-  display: grid;
-  place-items: center;
-  border-radius: 47% 53% 51% 49% / 52% 47% 53% 48%;
-  background:
-    radial-gradient(circle at 34% 30%, rgba(255, 255, 255, .35), transparent 38%),
-    radial-gradient(circle at 50% 50%, var(--cera) 55%, color-mix(in srgb, var(--cera) 60%, black));
-  box-shadow: 0 4px 8px rgba(0, 0, 0, .45), inset 0 -3px 6px rgba(0, 0, 0, .35);
-}
-.selo span {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, .22);
-  font-family: var(--font-title);
-  font-weight: 700;
-  font-size: .82rem;
-  color: rgba(255, 255, 255, .55);
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, .35);
-}
-.envelope.lida .selo { filter: grayscale(.3) brightness(.8); }
-.envelope.lida .envelope-aba { clip-path: polygon(0 0, 100% 0, 52% 96%, 46% 100%); }
-.envelope-lida {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  font-family: var(--font-title);
-  font-size: .55rem;
+  font-size: .5rem;
   letter-spacing: .2em;
   text-transform: uppercase;
-  color: #7a5a2c;
-  opacity: .7;
+  color: #5b3c1c;
+  mix-blend-mode: multiply;
+}
+.ev.lida .ev-corpo img { filter: brightness(.74) saturate(.6); }
+/* com mouse: a carta vem na direcao da camera e ganha um brilho de lua */
+@media (hover: hover) and (pointer: fine) {
+  .ev:hover .ev-corpo {
+    transform: translateZ(70px) rotateX(var(--rx)) rotateY(var(--ry)) scale(1.06);
+    filter:
+      drop-shadow(0 26px 26px rgba(0, 0, 0, .6))
+      drop-shadow(0 0 18px rgba(255, 210, 150, .45));
+  }
+  .ev:hover .ev-flutua { animation-play-state: paused; }
+  .ev:hover .ev-corpo img { filter: brightness(1) saturate(.95); }
+}
+.ev:focus-visible .ev-corpo {
+  transform: translateZ(70px) scale(1.06);
+  filter: drop-shadow(0 0 0 2px rgba(242, 200, 121, .9)) drop-shadow(0 0 18px rgba(255, 210, 150, .5));
+}
+
+@media (max-aspect-ratio: 9/10) {
+  .ev { --lw: clamp(96px, 25vw, 150px); }
+  .ev-de { font-size: .6rem; padding: 0 6%; }
+  .mural-topo { left: 0; right: 0; justify-items: center; text-align: center; }
 }
 
 /* =========================================================================
@@ -1321,253 +1364,147 @@ body[data-house="lufalufa"]   { --house-1: #f5cf6d; --house-2: #726255; --house-
   display: grid;
   place-items: center;
   padding: 16px;
-  background: rgba(5, 3, 1, .82);
+  overflow-y: auto;
+  /* a coruja nas nuvens continua aparecendo atras da carta */
+  background: rgba(4, 6, 14, .52);
   animation: aparecer .4s ease both;
+  perspective: 1700px;
 }
 @keyframes aparecer { from { opacity: 0; } to { opacity: 1; } }
 
-/* o envelope grande que se abre */
-.abrindo-envelope {
-  --cera: #7a1414;
-  --l: min(520px, 86vw);
+/* a carta aberta usa o mesmo pergaminho de foto da carta de login (.lc-*) */
+.cl-palco {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  transform-style: preserve-3d;
+}
+.cl {
+  --w: min(540px, 92vw, calc((100svh - 120px) * .678));
+  --tinta: #2a2116;
+  --tinta-verde: #1d4630;
+  --tinta-clara: #5e4a2e;
   position: relative;
-  width: var(--l);
-  aspect-ratio: 1.55;
-  perspective: 1200px;
-  animation: envelopeCresce 1.65s var(--ease) both;
+  width: var(--w);
+  transform-style: preserve-3d;
 }
-@keyframes envelopeCresce {
-  0%   { transform: scale(.7) translateY(30px); opacity: 0; }
-  15%  { transform: scale(1) translateY(30px); opacity: 1; }
-  85%  { transform: scale(1) translateY(30px); opacity: 1; }
-  100% { transform: scale(1.12) translateY(30px); opacity: 0; }
-}
-.ae-fundo, .ae-frente, .ae-aba, .ae-carta { position: absolute; border-radius: 3px; }
-.ae-fundo {
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(180deg, #b89a64, #cfb683);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, .6);
-}
-.ae-carta {
-  left: 6%;
-  right: 6%;
-  top: 6%;
-  bottom: 4%;
-  z-index: 2;
-  background-color: var(--paper);
-  background-image: var(--grao), repeating-linear-gradient(180deg, transparent 0 16px, rgba(90, 60, 25, .12) 16px 17px), linear-gradient(170deg, #f5ead2, #e4d0a6);
-  background-size: 220px 220px, auto, cover;
-  animation: cartaSai 1.65s var(--ease) both;
-}
-@keyframes cartaSai {
-  0%, 50% { transform: translateY(0); }
-  88%     { transform: translateY(-62%); }
-  100%    { transform: translateY(-66%); }
-}
-.ae-frente {
-  inset: 0;
-  z-index: 3;
-  background-color: var(--paper);
-  background-image: var(--grao), linear-gradient(165deg, #f0e2c2, #d8c090);
-  background-size: 220px 220px, cover;
-  clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
-  box-shadow: inset 0 0 30px rgba(120, 80, 30, .3);
-}
-.ae-aba {
-  inset: 0 0 46% 0;
-  z-index: 4;
-  transform-origin: 50% 0;
-  background: linear-gradient(165deg, #e6d4ad, #c8ab79);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  animation: abaAbre 1.65s var(--ease) both;
-}
-@keyframes abaAbre {
-  0%, 18% { transform: rotateX(0deg); z-index: 4; }
-  45%     { transform: rotateX(180deg); z-index: 4; }
-  46%     { z-index: 0; }
-  100%    { transform: rotateX(180deg); z-index: 0; }
-}
-.ae-selo {
+.cl .lc-folha { transform: rotate(.6deg); }
+
+/* a escrita, por cima dos tres tercos; o lacre da foto fica no canto de baixo */
+.cl-escrita {
   position: absolute;
+  inset: 0;
   z-index: 5;
-  top: calc(54% - 40px);
-  left: 50%;
-  width: 80px;
-  height: 80px;
-  margin-left: -40px;
+  transform: translateZ(1px);
   display: grid;
-  place-items: center;
-  border-radius: 47% 53% 51% 49% / 52% 47% 53% 48%;
-  background:
-    radial-gradient(circle at 34% 30%, rgba(255, 255, 255, .35), transparent 38%),
-    radial-gradient(circle at 50% 50%, var(--cera) 55%, color-mix(in srgb, var(--cera) 60%, black));
-  box-shadow: 0 6px 12px rgba(0, 0, 0, .5), inset 0 -4px 8px rgba(0, 0, 0, .35);
-  animation: seloQuebra 1.65s var(--ease) both;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  padding: calc(var(--w) * .085) calc(var(--w) * .1) calc(var(--w) * .1);
+  color: var(--tinta);
 }
-.ae-selo span {
-  display: grid;
-  place-items: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, .22);
-  font-family: var(--font-title);
-  font-weight: 700;
-  font-size: 1.3rem;
-  color: rgba(255, 255, 255, .55);
-}
-@keyframes seloQuebra {
-  0%   { transform: scale(1); opacity: 1; }
-  8%   { transform: scale(1.12) rotate(-6deg); }
-  14%  { transform: scale(1.05) rotate(5deg); }
-  22%  { transform: scale(1.2) rotate(-2deg); opacity: 1; filter: brightness(1.4); }
-  32%  { transform: translateY(60px) rotate(40deg) scale(.6); opacity: 0; }
-  100% { opacity: 0; }
-}
-
-/* o pergaminho para leitura */
-.pergaminho {
-  position: relative;
-  width: min(700px, 100%);
-  max-height: calc(100vh - 32px);
-  max-height: calc(100dvh - 32px);
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto auto;
-  animation: pergaminhoAbre .9s var(--ease-out) both;
-}
-@keyframes pergaminhoAbre {
-  from { opacity: 0; transform: scale(.94); }
-  to   { opacity: 1; transform: none; }
-}
-.pergaminho-rolo {
-  position: relative;
-  z-index: 2;
-  height: 26px;
-  margin: 0 -10px;
-  border-radius: 13px;
-  background:
-    linear-gradient(180deg, #8a6a3e 0%, #e8d6ae 28%, #f6ead0 45%, #c9ae7c 70%, #6f5230 100%);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, .45);
-}
-.pergaminho-rolo::before,
-.pergaminho-rolo::after {
-  content: "";
-  position: absolute;
-  top: 3px;
-  width: 16px;
-  height: 20px;
-  border-radius: 6px;
-  background: linear-gradient(180deg, #5a3a1c, #a0743c 45%, #3e2410);
-}
-.pergaminho-rolo::before { left: -12px; }
-.pergaminho-rolo::after { right: -12px; }
-.pergaminho-miolo {
-  position: relative;
-  overflow-y: auto;
-  margin: -12px 0;
-  padding: clamp(34px, 6vh, 56px) clamp(22px, 6vw, 64px);
-  color: var(--ink);
-  background-color: var(--paper);
-  background-image:
-    var(--manchas),
-    var(--grao),
-    radial-gradient(ellipse at 50% 30%, rgba(255, 250, 235, .55), transparent 65%),
-    linear-gradient(180deg, #e9d8b2, #f2e6cb 12%, #efe0c0 88%, #dcc597);
-  background-size: cover, 220px 220px, cover, cover;
-  box-shadow: inset 0 0 70px rgba(120, 75, 25, .45), 0 30px 60px rgba(0, 0, 0, .55);
-  animation: desenrola 1.1s var(--ease-out) both;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(120, 80, 40, .5) transparent;
-}
-@keyframes desenrola {
-  from { clip-path: inset(50% 0 50% 0); }
-  to   { clip-path: inset(0 0 0 0); }
-}
-.pergaminho-rolo--topo { animation: roloTopo 1.1s var(--ease-out) both; }
-.pergaminho-rolo--base { animation: roloBase 1.1s var(--ease-out) both; }
-@keyframes roloTopo { from { transform: translateY(var(--meio, 160px)); } to { transform: none; } }
-@keyframes roloBase { from { transform: translateY(calc(var(--meio, 160px) * -1)); } to { transform: none; } }
-
-.pergaminho-data {
-  margin: 0 0 18px;
-  text-align: right;
-  font-style: italic;
-  font-size: .95rem;
-  color: var(--ink-soft);
-  animation: subir .8s .4s var(--ease-out) both;
-}
-.pergaminho-texto {
-  margin: 0 0 1em;
-  font-family: var(--font-letter);
-  font-size: clamp(1.2rem, 2.2vw, 1.42rem);
-  font-weight: 500;
-  line-height: 1.55;
-  color: #2b1b0c;
-  white-space: pre-line;
-  -webkit-user-select: text;
-  user-select: text;
-  animation: tinta 1s var(--ease-out) both;
-}
-@keyframes tinta {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: none; }
-}
-.assinatura {
-  display: grid;
-  justify-items: end;
-  margin-top: 26px;
-  animation: tinta 1.2s var(--ease-out) both;
-}
-.assinatura-nome {
-  font-family: var(--font-script);
-  font-size: clamp(2.1rem, 4.6vw, 2.8rem);
-  line-height: 1.1;
-  color: #2a1a0b;
-}
-.assinatura-cargo { font-style: italic; color: var(--ink-soft); font-size: .95rem; }
-
-.polaroid {
-  float: right;
-  width: clamp(120px, 28%, 190px);
-  margin: 0 0 14px 18px;
-  padding: 8px 8px 26px;
-  background: #fbf8f0;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, .35);
-  transform: rotate(3deg);
-  animation: tinta 1s .6s var(--ease-out) both;
-}
-.polaroid img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
-
-.fechar {
-  position: absolute;
-  z-index: 3;
-  top: 34px;
-  right: 14px;
-  width: 36px;
-  height: 36px;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(60, 35, 12, .12);
-  color: #4a2f15;
-  font-size: 1.6rem;
-  line-height: 1;
-  cursor: pointer;
-  transition: background .3s;
-}
-.fechar:hover { background: rgba(60, 35, 12, .22); }
-.fechar:focus-visible { outline: 2px solid #7a1414; }
-
-.pergaminho-nav {
+.cl-cabecalho {
+  justify-self: center;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding-top: 16px;
+  gap: calc(var(--w) * .024);
+  margin: 0;
   font-family: var(--font-title);
-  font-size: .8rem;
+  font-size: calc(var(--w) * .021);
+  font-weight: 600;
+  letter-spacing: .42em;
+  padding-left: .42em;
+  text-transform: uppercase;
+  color: #7a2a1c;
+}
+.cl-cabecalho span { font-size: .85em; letter-spacing: 0; color: #9a6b2e; }
+.cl-data {
+  justify-self: end;
+  margin: calc(var(--w) * .03) 0 calc(var(--w) * .02);
+  font-family: var(--font-body);
+  font-size: calc(var(--w) * .027);
+  color: var(--tinta-clara);
+}
+/* o texto: se a carta for longa, rola dentro do papel e some suave nas pontas */
+.cl-corpo {
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+  font-family: var(--font-body);
+  font-size: max(14px, calc(var(--w) * .035));
+  line-height: 1.55;
+  color: var(--tinta);
+  text-wrap: pretty;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(90, 60, 25, .45) transparent;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 18px), transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 18px), transparent 100%);
+}
+.cl-corpo p { margin: 0 0 .8em; }
+/* o primeiro paragrafo e a saudacao, em tinta verde */
+.cl-corpo p:first-of-type {
+  font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+  font-weight: 600;
+  font-size: 1.4em;
+  line-height: 1.15;
+  color: var(--tinta-verde);
+}
+.cl-foto {
+  float: right;
+  width: 38%;
+  margin: 0 0 10px 14px;
+  padding: 6px 6px 18px;
+  background: #f4efe4;
+  box-shadow: 0 6px 14px rgba(40, 25, 10, .35);
+  transform: rotate(3deg);
+}
+.cl-foto img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+/* a assinatura fica a esquerda; a direita e o lugar do lacre da foto */
+.cl-assinatura {
+  display: grid;
+  justify-items: start;
+  padding-top: calc(var(--w) * .03);
+  padding-right: 32%;
+  font-family: var(--font-body);
+  font-size: calc(var(--w) * .028);
+  line-height: 1.25;
+  color: var(--tinta-clara);
+}
+.cl-assinatura strong {
+  font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+  font-weight: 600;
+  font-size: calc(var(--w) * .058);
+  line-height: 1.05;
+  color: var(--tinta-verde);
+}
+.cl-fechar {
+  position: absolute;
+  top: calc(var(--w) * .035);
+  right: calc(var(--w) * .035);
+  z-index: 6;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(90, 60, 25, .4);
+  border-radius: 50%;
+  background: rgba(240, 225, 190, .55);
+  font-size: 1.3rem;
+  line-height: 1;
+  color: #5a3c1c;
+  cursor: pointer;
+  transform: translateZ(2px);
+  transition: background .2s;
+}
+.cl-fechar:hover { background: rgba(240, 225, 190, .9); }
+.cl-fechar:focus-visible { outline: 2px solid #7a2a1c; }
+.cl-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-title);
+  font-size: .72rem;
   letter-spacing: .2em;
-  color: var(--gold-soft);
+  color: rgba(240, 226, 196, .85);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .8);
 }
 
 /* =========================================================================

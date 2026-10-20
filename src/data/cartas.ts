@@ -3,11 +3,9 @@ import type { Carta } from "../types";
 /* =========================================================================
    AS CARTAS DA EQUIPE
    -------------------------------------------------------------------------
-   Uma carta por pessoa. As de baixo sao EXEMPLOS assinados por professores
-   de Hogwarts: troque pelas cartas de verdade.
+   Uma carta por pessoa. As de baixo sao EXEMPLOS: troque pelas cartas de
+   verdade (nome de quem escreveu, um cargo ou apelido e o texto).
 
-   - casa  (opcional) colore o selo de cera: "grifinoria", "sonserina",
-           "corvinal" ou "lufalufa".
    - foto  (opcional) arquivo em public/fotos/, ex.: foto: "ana.jpg".
    - texto aceita paragrafos: deixe uma linha em branco entre eles.
    - {nome} vira o nome da homenageada.
@@ -15,61 +13,93 @@ import type { Carta } from "../types";
 
 export const CARTAS: readonly Carta[] = [
   {
-    de: "Alvo Dumbledore",
-    cargo: "Diretor (exemplo)",
-    casa: "grifinoria",
+    de: "Nome da pessoa",
+    cargo: "Exemplo de carta",
     texto: `Querida {nome},
 
-A felicidade pode ser encontrada mesmo nas horas mais sombrias, se a pessoa se lembrar de acender a luz. Você acendeu muitas por aqui.
+Vai ser estranho olhar para a sua mesa e não te ver ali, mas a gente sabe que a distância é só de quilômetros. No resto, você continua aqui do lado.
 
-Que a nova casa te receba com a mesma alegria com que você recebia cada um de nós todas as manhãs.`,
+Que a cidade nova te receba do jeito que você sempre recebeu a gente: de braços abertos.`,
   },
   {
-    de: "Minerva McGonagall",
-    cargo: "Vice-diretora (exemplo)",
-    casa: "grifinoria",
+    de: "Nome da pessoa",
+    cargo: "Exemplo de carta",
     texto: `{nome},
 
-Não costumo ser sentimental, mas abro uma exceção: vai fazer muita falta ver você chegando com aquele café e a disposição de quem resolve qualquer coisa antes do almoço.
+Obrigado por cada café, cada ajuda de última hora e cada risada no meio de um dia corrido. Você deixou tudo mais leve.
 
-Cinquenta pontos para você. Por tudo.`,
+Agora é chamada de vídeo, mas a parceria é a mesma.`,
   },
   {
-    de: "Rúbeo Hagrid",
-    cargo: "Guarda-caça (exemplo)",
-    casa: "grifinoria",
-    texto: `Ô {nome}!
+    de: "Nome da pessoa",
+    cargo: "Exemplo de carta",
+    texto: `Oi, {nome}!
 
-Num devia tá escrevendo isso, num devia mesmo... mas vou sentir saudade demais. Quando quiser, aparece pra um chá com bolinho de pedra. A porta tá sempre aberta.
+Mudança dá frio na barriga, mas eu tenho certeza de que você vai tirar de letra, como sempre.
 
-Um abraço bem apertado (cuidado com as costelas).`,
+Quando bater saudade, é só abrir o chat. A gente responde rapidinho.`,
   },
   {
-    de: "Fílio Flitwick",
-    cargo: "Feitiços (exemplo)",
-    casa: "corvinal",
+    de: "Nome da pessoa",
+    cargo: "Exemplo de carta",
+    texto: `{nome},
+
+Algumas plantas crescem melhor quando mudam de vaso. Tenho certeza de que você vai florescer aí.
+
+Leve um pedacinho da gente na bagagem.`,
+  },
+  {
+    de: "Nome da pessoa",
+    cargo: "Exemplo de carta",
     texto: `Cara {nome},
 
-Wingardium leviosa! Que tudo na sua nova jornada flutue com essa leveza que você sempre teve.
+Que a nova casa seja cheia de luz, de gente boa e de dias tranquilos. Você merece cada um deles.
 
-Com carinho e um pouquinho de magia.`,
+Com carinho, e com saudade antecipada.`,
   },
   {
-    de: "Pomona Sprout",
-    cargo: "Herbologia (exemplo)",
-    casa: "lufalufa",
-    texto: `{nome}, minha flor,
+    de: "Nome da pessoa",
+    cargo: "Exemplo de carta",
+    texto: `{nome},
 
-Algumas plantas crescem melhor quando mudam de vaso. Tenho certeza de que você vai florescer lindamente aí.
+Mudou de cidade, mas nunca de equipe. Conta com a gente para tudo.
 
-Leve um pedacinho da gente nas raízes.`,
+Um abraço bem apertado.`,
   },
   {
-    de: "Severo Snape",
-    cargo: "Poções (exemplo)",
-    casa: "sonserina",
-    texto: `{nome}.
+    de: "Nome da pessoa",
+    cargo: "Exemplo de carta",
+    texto: `Querida {nome},
 
-Sempre.`,
+Lembra daquele dia em que tudo deu errado e você ainda fez a gente rir? É desse jeito que eu vou lembrar de você.
+
+Boa sorte na nova fase. Vai dar tudo certo.`,
+  },
+  {
+    de: "Nome da pessoa",
+    cargo: "Exemplo de carta",
+    texto: `{nome},
+
+A reunião de segunda não vai ser a mesma sem os seus comentários. Mas a gente promete deixar a câmera ligada para você.
+
+Até a próxima chamada!`,
+  },
+  {
+    de: "Nome da pessoa",
+    cargo: "Exemplo de carta",
+    texto: `Oi, {nome}!
+
+Que você encontre café bom, vizinhos simpáticos e um caminho tranquilo para o trabalho. O resto você já tem: talento e coração.
+
+Saudade já começou.`,
+  },
+  {
+    de: "Nome da pessoa",
+    cargo: "Exemplo de carta",
+    texto: `{nome},
+
+Obrigada por ensinar tanta coisa sem nunca fazer ninguém se sentir perdido. Você deixa um jeito de trabalhar que fica aqui com a gente.
+
+Nos vemos em breve, de perto ou pela tela.`,
   },
 ];
