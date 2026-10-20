@@ -37,13 +37,16 @@ Te desejo muita felicidade e conquistas nessa nova fase! E já que estamos falan
 Obrigado por tudo! ❤️`,
   },
   {
-    de: "Nome da pessoa",
-    cargo: "Exemplo de carta",
-    texto: `Oi, {nome}!
+    de: "Pedro Toni",
+    texto: `Thalita,
 
-Mudança dá frio na barriga, mas eu tenho certeza de que você vai tirar de letra, como sempre.
+Obrigado pelo voto de confiança quando me deu a oportunidade de entrar na Nexus. Foi uma porta importante para mim, e sou grato por ela.
 
-Quando bater saudade, é só abrir o chat. A gente responde rapidinho.`,
+Desde então foi um período de muito aprendizado, com projetos que exigiram bastante e me fizeram crescer. Obrigado por ter acompanhado essa caminhada de perto. Cada fase trouxe desafios diferentes, e levo comigo a experiência de ter passado por eles.
+
+Desejo sucesso no seu próximo caminho, que venham boas oportunidades e que essa nova fase seja muito boa para você.
+
+Um abraço, e até uma próxima.`,
   },
   {
     de: "Nome da pessoa",
