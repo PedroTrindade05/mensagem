@@ -13,13 +13,16 @@ import type { Carta } from "../types";
 
 export const CARTAS: readonly Carta[] = [
   {
-    de: "Nome da pessoa",
-    cargo: "Exemplo de carta",
-    texto: `Querida {nome},
+    de: "Gabriel Gonçalves",
+    texto: `Thalita,
 
-Vai ser estranho olhar para a sua mesa e não te ver ali, mas a gente sabe que a distância é só de quilômetros. No resto, você continua aqui do lado.
+Obrigado por tudo, desde o primeiro dia. Lá na entrevista você já me fez sentir confortável, como se eu já fizesse parte da equipe. E foi assim todos os dias depois disso.
 
-Que a cidade nova te receba do jeito que você sempre recebeu a gente: de braços abertos.`,
+O seu alto astral fazia toda a diferença: sempre animada, sempre alegre, com uma alegria que irradiava pela sala inteira. Nunca vou esquecer a sua surpresa toda vez que via um front bonito que os meninos tinham feito.
+
+E essa alegria aparecia até nas broncas: você ficava séria quando precisava, e era justamente isso que fazia a gente render mais.
+
+Vai fazer muita falta, chefinha. Tudo de sucesso e de melhor nessa sua nova jornada em outra cidade!`,
   },
   {
     de: "Nome da pessoa",
