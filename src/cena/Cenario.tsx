@@ -1,5 +1,5 @@
 import { Component, lazy, Suspense, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import { asset } from "../config";
+import { assetUrl } from "../config";
 import type { Humor } from "./chapeu/expressoes";
 import type { LerNivel, LerNumero } from "./tipos";
 import type { Fase, HouseKey } from "../types";
@@ -19,8 +19,8 @@ const CenaChapeu = lazy(() => import("./CenaChapeu"));
 
 /** A mesma foto que o 3D usa de fundo (FundoFoto.tsx). */
 const IMAGENS_PARADAS = {
-  "--cena-paisagem": `url("${asset("cena/salao.jpg")}")`,
-  "--cena-retrato": `url("${asset("cena/salao.jpg")}")`,
+  "--cena-paisagem": `url("${assetUrl("cena/salao.jpg")}")`,
+  "--cena-retrato": `url("${assetUrl("cena/salao.jpg")}")`,
 } as CSSProperties;
 
 interface CenarioProps {

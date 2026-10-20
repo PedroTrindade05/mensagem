@@ -2,10 +2,10 @@ import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { DESPEDIDA } from "../data/despedida";
-import { asset } from "../config";
+import { assetUrl } from "../config";
 
 /** A foto do pergaminho, cortada em tercos pelo CSS (.lc-frente / .lc-verso). */
-const FOTO_CARTA = { "--foto": `url("${asset("img/carta-pergaminho.webp")}")` } as CSSProperties;
+const FOTO_CARTA = { "--foto": `url("${assetUrl("img/carta-pergaminho.webp")}")` } as CSSProperties;
 
 gsap.registerPlugin(useGSAP);
 

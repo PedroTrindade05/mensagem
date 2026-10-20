@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { CARTAS } from "../data/cartas";
 import { DESPEDIDA, comNome } from "../data/despedida";
-import { FOTO_DIR, VIDEO_NUVENS, VIDEO_NUVENS_VOO, asset } from "../config";
+import { FOTO_DIR, VIDEO_NUVENS, VIDEO_NUVENS_VOO, asset, assetUrl } from "../config";
 import type { Carta } from "../types";
 
 gsap.registerPlugin(useGSAP);
@@ -22,7 +22,7 @@ gsap.registerPlugin(useGSAP);
 const CHAVE_LIDAS = "chapeu-despedida:lidas";
 const FOTO_ENVELOPE = "img/envelope.webp";
 /** O pergaminho da carta aberta: a mesma foto da carta de login, cortada em tercos pelo CSS. */
-const FOTO_CARTA = { "--foto": `url("${asset("img/carta-pergaminho.webp")}")` } as CSSProperties;
+const FOTO_CARTA = { "--foto": `url("${assetUrl("img/carta-pergaminho.webp")}")` } as CSSProperties;
 /** A boca da sacola no quadro do video (fracao de 1920 x 1080): de onde as cartas saem. */
 const SACOLA = { fx: 0.49, fy: 0.44 };
 /** Quanto antes do fim do voo o loop da coruja entra (cruzam num fade). */

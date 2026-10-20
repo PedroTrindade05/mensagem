@@ -10,6 +10,14 @@
 export const asset = (path: string): string =>
   `${import.meta.env.BASE_URL}${path}`;
 
+/**
+ * Como asset(), mas devolve o endereco completo. Use quando o caminho vai
+ * para uma variavel de CSS (url() dentro de custom property): um caminho
+ * relativo ali e resolvido a partir da pasta do CSS (/assets/) e nao da
+ * pagina, e a imagem some no build.
+ */
+export const assetUrl = (path: string): string => new URL(asset(path), document.baseURI).href;
+
 export const AUDIO_DIR = "audio/";
 export const IMG_DIR = "brasoes/";
 export const FOTO_DIR = "fotos/";
