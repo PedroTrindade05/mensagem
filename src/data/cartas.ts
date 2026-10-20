@@ -95,4 +95,16 @@ Te desejo todo o sucesso do mundo nessa nova etapa. Que Londrina te receba de br
 Com carinho ❤️
 Mery do Vale.`,
   },
+  {
+    de: "Bianca",
+    texto: `Thaliiii
+
+Então é isso? Você vai mesmo me abandonar e ir para Londrina? 😅
+
+Brincadeiraaa, sei que é preciso. Mas já aviso: ninguém vai substituir minha dupla. Vou sentir muita saudade de você todos os dias, demtodas as segundas caóticas, de todos os pedidos de almoçar fora, todos os pedidos de ajuda com tecnologia kkkk, do momento em que você quer comer um docinho, de absolutamente tudo!
+
+Você é uma pessoa incrível que anima e ilumina cada lugar por onde passa, Londrina tirou a sorte grande em ter você mais perto agora, te amo muito, arruma tudo lá e volta logo!
+
+OBS: você também está proibida de ter outra colega de trabalho ou amiga em Londrina ou qualquer outro lugar!`,
+  },
 ];
