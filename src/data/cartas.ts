@@ -3,8 +3,8 @@ import type { Carta } from "../types";
 /* =========================================================================
    AS CARTAS DA EQUIPE
    -------------------------------------------------------------------------
-   Uma carta por pessoa. As de baixo sao EXEMPLOS: troque pelas cartas de
-   verdade (nome de quem escreveu, um cargo ou apelido e o texto).
+   Uma carta por pessoa. Cada carta nova entra no fim da lista (sem linha
+   cargo: so o nome de quem escreveu e o texto).
 
    - foto  (opcional) arquivo em public/fotos/, ex.: foto: "ana.jpg".
    - texto aceita paragrafos: deixe uma linha em branco entre eles.
@@ -49,66 +49,15 @@ Desejo sucesso no seu próximo caminho, que venham boas oportunidades e que essa
 Um abraço, e até uma próxima.`,
   },
   {
-    de: "Nome da pessoa",
-    cargo: "Exemplo de carta",
-    texto: `{nome},
+    de: "Pedro Trindade",
+    texto: `Thalita,
 
-Algumas plantas crescem melhor quando mudam de vaso. Tenho certeza de que você vai florescer aí.
+Você tem um dom estranho: acredita no trabalho da gente até quando a gente mesmo não acredita. Eu não sou designer e você confiou em mim para fazer um mídia kit para dupla sertaneja e as artes para o feirão kkkkkk. Obrigado por essa confiança, de verdade.
 
-Leve um pedacinho da gente na bagagem.`,
-  },
-  {
-    de: "Nome da pessoa",
-    cargo: "Exemplo de carta",
-    texto: `Cara {nome},
+Vai ser muito esquisito chegar na Nexus ou na GS e não te encontrar com aquela energia toda logo cedo.
 
-Que a nova casa seja cheia de luz, de gente boa e de dias tranquilos. Você merece cada um deles.
+Muita sorte nessa nova jornada! Você vai fazer muita falta aqui perto do time.
 
-Com carinho, e com saudade antecipada.`,
-  },
-  {
-    de: "Nome da pessoa",
-    cargo: "Exemplo de carta",
-    texto: `{nome},
-
-Mudou de cidade, mas nunca de equipe. Conta com a gente para tudo.
-
-Um abraço bem apertado.`,
-  },
-  {
-    de: "Nome da pessoa",
-    cargo: "Exemplo de carta",
-    texto: `Querida {nome},
-
-Lembra daquele dia em que tudo deu errado e você ainda fez a gente rir? É desse jeito que eu vou lembrar de você.
-
-Boa sorte na nova fase. Vai dar tudo certo.`,
-  },
-  {
-    de: "Nome da pessoa",
-    cargo: "Exemplo de carta",
-    texto: `{nome},
-
-A reunião de segunda não vai ser a mesma sem os seus comentários. Mas a gente promete deixar a câmera ligada para você.
-
-Até a próxima chamada!`,
-  },
-  {
-    de: "Nome da pessoa",
-    cargo: "Exemplo de carta",
-    texto: `Oi, {nome}!
-
-Que você encontre café bom, vizinhos simpáticos e um caminho tranquilo para o trabalho. O resto você já tem: talento e coração.
-
-Saudade já começou.`,
-  },
-  {
-    de: "Nome da pessoa",
-    cargo: "Exemplo de carta",
-    texto: `{nome},
-
-Obrigada por ensinar tanta coisa sem nunca fazer ninguém se sentir perdido. Você deixa um jeito de trabalhar que fica aqui com a gente.
-
-Nos vemos em breve, de perto ou pela tela.`,
+Abraço!`,
   },
 ];
