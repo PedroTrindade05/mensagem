@@ -74,4 +74,12 @@ Obrigado por tudo, de coração. Que a sua nova jornada seja abençoada por Deus
 
 Com carinho,`,
   },
+  {
+    de: "João Gabriel Furlan",
+    texto: `Oiii minha primeira paixonite AOISDHAOISDH
+
+Há 20 anos atrás eu era completamente apaixonado por voce, voce foi a primeira que me mostrou o que é viver uma paixao gostosa e recíproca e eu nunca vou esquecer disso. Éramos criancas, apenas! Apesar do sentimento nao ser mais o mesmo e a nossa cabeca ter mudado completamente, toda vez que voce voltou na minha vida teve um significado importante, mesmo que por curto periodo de tempo. A gente se dá tao bem hoje em dia, o sentimento se tranformou em algo sólido, fraternal e verdadeiro mas continua firme e forte, com 20 anos de idade hehe (tamo véio demais, slc... 🫠) Tha, de verdade, você não tem um pingo de nocão do quanto voce me ajudou com esse trampo... Eu sempre vivi acomodado, larguei meus sonhos de lado pra viver os do meu pai... mas voce me salvou disso,  a pessoa que abriu a primeira porta para as minhas proprias realizacoes e eu nunca vou esquecer isso, voce confiou em mim e me deu essa oportunidade. Voce nao tinha UM PINGO de nocao da sua importancia nisso tudo, né? Pois é... Voce é um mulherao de cair o queixo em todos os melhores sentidos possíveis e eu te admiro INFINITAMENTE! Que voce continue bagacando e realizando feitos incriveis e tocando a vida te cada um que te conhece da forma que só você pode! Venha sempre nos visitar, POR FAVOR! vamos sentir muito a sua falta (mais do que ja sentimos, voce nem tinha tempo de ficar aqui aosidhasiodhasoidh). 🥹 Sério carai, nao some. kkkkkkk
+
+do seu primeiro namoradinho e agora eternamente grato amigo s2`,
+  },
 ];
