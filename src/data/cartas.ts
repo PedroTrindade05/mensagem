@@ -60,4 +60,18 @@ Muita sorte nessa nova jornada! Você vai fazer muita falta aqui perto do time.
 
 Abraço!`,
   },
+  {
+    de: "Paulo",
+    texto: `Muito antes de a gente trabalhar junto, você já acreditava em mim. Foi você que me indicou e me abriu a porta da Nexus, quando eu nunca tinha trabalhado como dev e nunca tinha feito nada que ajudasse alguém com o meu trabalho de dev.
+
+Você foi a minha carta de Hogwarts kkkkkkkkkkkkk. Chegou na hora certa e me mostrou que eu tinha lugar nesse mercado.
+
+Graças a essa oportunidade, hoje eu participo de projetos que entregam valor e me sinto um programador capaz. Isso começou com a sua confiança em mim, e eu nunca vou esquecer.
+
+E tem o seu jeito. Carismática, de bom humor, sempre atenciosa e dedicada com quem tá ao redor. Você faz a gente se sentir cuidado, e isso deixou os meus dias aqui bem melhores.
+
+Obrigado por tudo, de coração. Que a sua nova jornada seja abençoada por Deus e que ele te acompanhe e ilumine, e que a sua alegria continue transformando a vida de quem cruza o seu caminho, como transformou a minha.
+
+Com carinho,`,
+  },
 ];
