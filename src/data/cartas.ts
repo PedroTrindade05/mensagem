@@ -82,4 +82,17 @@ Há 20 anos atrás eu era completamente apaixonado por voce, voce foi a primeira
 
 do seu primeiro namoradinho e agora eternamente grato amigo s2`,
   },
+  {
+    de: "Mery do Vale",
+    texto: `Thali,
+
+Que essa nova fase em Londrina seja linda, leve, que você encontre caminhos que te levem cada vez mais longe, realize seus sonhos, conquiste tudo aquilo que deseja e tenha muita prosperidade em cada passo dessa nova jornada.
+
+Que não faltem motivos para sorrir, coragem para recomeçar e pessoas boas para compartilhar as conquistas com você. Que essa mudança seja o início de um ciclo de muito crescimento, felicidade e realizações.
+
+Te desejo todo o sucesso do mundo nessa nova etapa. Que Londrina te receba de braços abertos e que a vida te surpreenda da melhor forma possível!
+
+Com carinho ❤️
+Mery do Vale.`,
+  },
 ];
