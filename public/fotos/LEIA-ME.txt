@@ -1,0 +1,1 @@
+Fotos das cartas (opcional). Use o nome do arquivo no campo foto de src/data/cartas.ts.

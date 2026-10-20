@@ -1,0 +1,13 @@
+Falas originais do Chapeu (do questionario antigo), recuperadas do GitHub.
+Mesma voz dos vereditos (resultado_*.mp3). Nao sao usadas pela despedida:
+servem de referencia da voz, ou para reaproveitar algum trecho.
+
+audio_q<pergunta>_<alternativa>.mp3. Trechos de cada pergunta, segundo os
+comentarios do codigo antigo (a ordem dentro de cada pergunta pode nao bater
+com a letra; so a pergunta 1 foi conferida):
+
+q1: "ousado" (a) / "uma mente afiada" (b) / "vejo muita ambicao" (c) / "muito justo, muito leal" (d)
+q2: "caminho seguro e acolhedor" / "historia e segredos antigos" / "caminhando em direcao ao fogo" / "fascinado pelas sombras"
+q3: "enfrentando a fera de frente" / "um gosto requintado" / "o desconhecido te atrai" / "aprecia a simplicidade e a vida"
+q4: "deixar uma marca na mente dos outros" / "o poder atrai o poder" / "a verdadeira nobreza esta em ser lembrado" / "gloria atraves de grandes feitos"
+q5: "o elixir da bravura" / "a expansao da mente, a sede de conhecimento" / "controle e segredos" / "conforto e amor"
