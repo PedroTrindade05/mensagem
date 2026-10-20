@@ -117,4 +117,14 @@ Desejo muita sorte nessa nova fase em Londrina. Que seja um recomeço muito bom,
 
 Abraço!`,
   },
+  {
+    de: "Lucas Meyer",
+    texto: `Oi gatinha!
+
+Ficamos sabendo da sua mudança, e queria aprovar a oportunidade pra dizer algumas palavras. Primeiro meus parabéns por estar tomando essa frente que eu não sei que é fácil, e parabéns pela pessoa que você é, de uma energia contagiante. Sei que até agora ainda não tivemos tantas oportunidades de trabalhar juntos, mas eu já notei desde o início que você tem o dom pra lidar com pessoas, e isso com certeza faz toda a diferença pra quem está por perto. Também queria agradecer a oportunidade de trabalharmos juntos, tenho muito orgulho de quem você se tornou, saiba que o que precisar, pessoal ou profissionalmente pode contar comigo. Aproveita esse período, que vai ser muito importante pra você.
+
+Voa minha bruxinha, pena que não pode ser de vassoura né!
+
+Beijo, se cuida ❤️`,
+  },
 ];
